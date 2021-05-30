@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * JavaFX App
@@ -20,6 +21,7 @@ public class App extends Application {
         scene = new Scene(loadFXML("primary"), 640, 480);
         stage.setScene(scene);
         stage.show();
+
     }
 
     static void setRoot(String fxml) throws IOException {
@@ -33,6 +35,13 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
+        System.out.println("test");
+        try {
+            DBConnect.connectToDB();
+            System.out.println("Connected with database");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }
