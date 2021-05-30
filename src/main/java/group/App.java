@@ -35,13 +35,6 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
-        System.out.println("test");
-        try {
-            DBConnect.connectToDB();
-            System.out.println("Connected with database");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 }

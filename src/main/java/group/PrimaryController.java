@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.List;
 
 import group.file_loaders.Loader;
@@ -66,5 +67,14 @@ public class PrimaryController {
         String[] suffixes= ImageIO.getReaderFileSuffixes();
         for(String suffix  : suffixes)
             textFieldTest.setText(suffix+'\n'+textFieldTest.getText());
+    }
+    public void ConnectToDB(){
+        System.out.println("test");
+        try {
+            DBConnect.connectToDB();
+            System.out.println("Connected with database");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

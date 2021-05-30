@@ -12,6 +12,7 @@
       <Button fx:id="dirButton" mnemonicParsing="false" onAction="#openDirDialog" text="Dir" />
       <Button fx:id="testButton" mnemonicParsing="false" onAction="#doSomething" text="Print" />
       <Button fx:id="primaryButton" onAction="#switchToSecondary" text="Switch to Secondary View" />
+      <Button mnemonicParsing="false" onMouseClicked="#ConnectToDB" text="ConnectToDB" />
       <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
       <TextArea fx:id="textFieldTest" prefHeight="200.0" prefWidth="200.0" />
    </children>
