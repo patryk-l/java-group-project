@@ -32,31 +32,35 @@ public class PrimaryController {
         App.setRoot("secondary");
     }
 
-    public void doSomething(ActionEvent actionEvent) {
+    public void doSomething() {
         List<Path> paths = null;
-        textFieldTest.clear();
+        Path csvPath = null;
         if(chosenDirectory==null)
             return;
         try {
             paths = Loader.listImages(chosenDirectory.getPath());
+            csvPath = Loader.getCSVPath(chosenDirectory.getPath());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        for(Path path : paths)
-            textFieldTest.setText(path.toString()+'\n'+textFieldTest.getText());
 
-        //imageView.setImage(Loader.loadToGraphics2D(paths.get(0)));
-        try {
-            Image image = new Image(Files.newInputStream(paths.get(0)));
-            imageView.setImage(image);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        for(Path path : paths)
+////            textFieldTest.setText(path.toString()+'\n'+textFieldTest.getText());
+//
+//        //imageView.setImage(Loader.loadToGraphics2D(paths.get(0)));
+//        try {
+//            Image image = new Image(Files.newInputStream(paths.get(0)));
+//            imageView.setImage(image);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
     public void openDirDialog(ActionEvent actionEvent) {
         chosenDirectory = chooser.showDialog(null);
+        this.doSomething();
+
         /*if(chosenDirectory!=null)
             System.out.println(chosenDirectory.getPath());*/
     }

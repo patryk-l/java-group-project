@@ -60,4 +60,22 @@ public class Loader {
         return list;
     }
 
+    public static Path getCSVPath(String path) throws URISyntaxException {
+        Path csvPath = null;
+        Path directoryPath = Path.of(path);
+        String csvSuffix = "csv";
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directoryPath)) {
+            for (Path file: stream) {
+                if(csvSuffix.equals(file.toString().substring(file.toString().lastIndexOf('.')+1)))
+                    csvPath = file;
+            }
+        } catch (IOException | DirectoryIteratorException x) {
+            System.err.println(x);
+        }
+        return csvPath;
+    }
+
+//    public static List<> convertCSV(String path) throws URISyntaxException {
+//
+//    }
 }
