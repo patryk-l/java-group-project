@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.Raster;
+import java.awt.image.RenderedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.Buffer;
@@ -23,14 +24,11 @@ import java.util.List;
 public class Loader {
 
     public static BufferedImage loadToBufferedImage(Path path) throws IOException {
-        BufferedImage bufferedImage = ImageIO.read(path.toFile());
-        //InputStream stream = Files.newInputStream(path);
-        return bufferedImage;
+        return ImageIO.read(path.toFile());
     }
 
     public static byte[] getByteArray(BufferedImage image){
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();) {
             ImageIO.write(image,"bmp",outputStream);
             return outputStream.toByteArray();
         } catch (IOException e) {
@@ -39,10 +37,10 @@ public class Loader {
         return null;
     }
 
-    //Unfinished
-    public static BufferedImage getBufferedImageFromByteArray(byte[] bytes){
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-        return null;
+    public static BufferedImage getBufferedImageFromByteArray(byte[] bytes) throws IOException {
+        try(ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
+            return ImageIO.read(inputStream);
+        }
     }
 
     public static List<Path> listImages(String path) throws URISyntaxException {

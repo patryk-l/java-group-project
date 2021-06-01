@@ -9,7 +9,7 @@ public class DBConnect {
         String url="jdbc:mysql://localhost/MachineLearning";
         Properties properties = new Properties();
         properties.setProperty("user","root");
-        properties.setProperty("password","1234567890");
+        properties.setProperty("password","");
         try {
             connection = DriverManager.getConnection(url,properties);
         } catch (SQLException e) {
