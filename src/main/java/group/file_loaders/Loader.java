@@ -1,23 +1,14 @@
 package group.file_loaders;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
-import javax.imageio.ImageReader;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.metadata.IIOMetadata;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.Raster;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.Buffer;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class Loader {
@@ -75,7 +66,25 @@ public class Loader {
         return csvPath;
     }
 
-//    public static List<> convertCSV(String path) throws URISyntaxException {
-//
-//    }
+    public static List<CSVRow> convertCSV(String path) throws URISyntaxException {
+        List<CSVRow> csvRows = new ArrayList<>();
+        String FieldDelimiter = ";";
+        BufferedReader br;
+
+        try {
+            br = new BufferedReader(new FileReader(path));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(FieldDelimiter, -1);
+                csvRows.add(new CSVRow(fields[0], Arrays.copyOfRange(fields, 1, fields.length)));
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return csvRows;
+    }
 }
+

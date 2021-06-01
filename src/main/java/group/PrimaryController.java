@@ -3,17 +3,14 @@ package group;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
 import group.file_loaders.Loader;
+import group.file_loaders.CSVRow;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 
@@ -32,7 +29,7 @@ public class PrimaryController {
         App.setRoot("secondary");
     }
 
-    public void doSomething() {
+    public void doSomething() throws URISyntaxException {
         List<Path> paths = null;
         Path csvPath = null;
         if(chosenDirectory==null)
@@ -43,6 +40,9 @@ public class PrimaryController {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
+        List<CSVRow> csvRows = Loader.convertCSV(csvPath.toString());
+
 
 //        for(Path path : paths)
 ////            textFieldTest.setText(path.toString()+'\n'+textFieldTest.getText());
@@ -57,7 +57,7 @@ public class PrimaryController {
 
     }
 
-    public void openDirDialog(ActionEvent actionEvent) {
+    public void openDirDialog(ActionEvent actionEvent) throws URISyntaxException {
         chosenDirectory = chooser.showDialog(null);
         this.doSomething();
 
