@@ -1,7 +1,6 @@
 package group;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,7 +52,6 @@ public class PrimaryController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void openDirDialog(ActionEvent actionEvent) {
@@ -68,7 +66,7 @@ public class PrimaryController {
         for(String suffix  : suffixes)
             textFieldTest.setText(suffix+'\n'+textFieldTest.getText());
     }
-    public void ConnectToDB(){
+    public void ConnectToDB() {
         System.out.println("test");
         try {
             DBConnect.connectToDB();
@@ -76,5 +74,36 @@ public class PrimaryController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public void InsertImage(){
+        List<Path> paths = null;
+        if(chosenDirectory==null)
+            return;
+        try {
+            paths = Loader.listImages(chosenDirectory.getPath());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        //imageView.setImage(Loader.loadToGraphics2D(paths.get(0)));
+        try {
+            ImageRow imageRow=new ImageRow(new File(String.valueOf(paths.get(0))));
+            DBConnect.insertImage(imageRow);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void showImage() {
+        ImageRow imageRow = null;
+        try {
+            imageRow = DBConnect.getImage(2);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(imageRow==null) return;
+        Image image;
+        image = new Image(imageRow.getImage());
+        imageView.setImage(image);
+        System.out.println(imageRow.getSize());
     }
 }
