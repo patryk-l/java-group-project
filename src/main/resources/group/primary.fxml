@@ -13,6 +13,8 @@
       <Button fx:id="testButton" mnemonicParsing="false" onAction="#doSomething" text="Print" />
       <Button fx:id="primaryButton" onAction="#switchToSecondary" text="Switch to Secondary View" />
       <Button mnemonicParsing="false" onMouseClicked="#ConnectToDB" text="ConnectToDB" />
+      <Button mnemonicParsing="false" onMousePressed="#InsertImage" text="Insert Image" />
+      <Button mnemonicParsing="false" onMousePressed="#showImage" text="ShowImage From DB" />
       <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
       <TextArea fx:id="textFieldTest" prefHeight="200.0" prefWidth="200.0" />
    </children>
