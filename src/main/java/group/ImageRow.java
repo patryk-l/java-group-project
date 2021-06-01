@@ -5,10 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class ImageRow {
     private IntegerProperty id;
@@ -28,6 +25,21 @@ public class ImageRow {
         width.setValue(0);
         height.setValue(0);
     }
+
+    /**
+     * FileInputStream powinien być zamknięty (podobnież nawet garbage collection do referencji tego nie gwarantuje)
+     * więc spróbujmy trzymać to w jakimś innym formacie(byte[]) i konwertować w blokach try with resources
+     * try(... InputStream(...))
+     *
+     * konwersja na byte[]:
+     *
+     * stream.readAllBytes()
+     *
+     * konwersja na stream:
+     *
+     * byte[] initialArray = { 0, 1, 2 };
+     * InputStream targetStream = new ByteArrayInputStream(initialArray);
+     * **/
     public ImageRow(File file) throws IOException {
         image=new FileInputStream(file);
         id=new SimpleIntegerProperty();
@@ -36,7 +48,17 @@ public class ImageRow {
         height=new SimpleIntegerProperty();
         id.setValue(0);
         size.setValue(file.length() / 1024);
+
+//        żeby nie wczytywać pliku dwukrotnie
+//        Po przejściu streama nie można go zresetować, więc trzeba utworzyć ponownie
+
+        /*
+        byte[] bytes = image.readAllBytes();
+        InputStream targetStream = new ByteArrayInputStream(bytes);
+        BufferedImage bufferedImage = ImageIO.read(targetStream);
+        */
         BufferedImage bufferedImage = ImageIO.read(new File(String.valueOf(file)));
+
         width.setValue(bufferedImage.getWidth());
         height.setValue(bufferedImage.getHeight());
     }
