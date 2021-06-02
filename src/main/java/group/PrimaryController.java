@@ -5,14 +5,18 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import group.file_loaders.Loader;
+import group.image_handlers.ImageUploader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
@@ -24,8 +28,11 @@ public class PrimaryController {
     public Button testButton;
     public TextArea textFieldTest;
     public ImageView imageView;
+    public ProgressBar progressBar;
+    public TextField pathShower;
     DirectoryChooser chooser = new DirectoryChooser();
     File chosenDirectory  = null;
+    List<Path> paths = null;
 
     @FXML
     private void switchToSecondary() throws IOException {
@@ -56,8 +63,12 @@ public class PrimaryController {
 
     public void openDirDialog(ActionEvent actionEvent) {
         chosenDirectory = chooser.showDialog(null);
-        /*if(chosenDirectory!=null)
-            System.out.println(chosenDirectory.getPath());*/
+        try {
+            paths = Loader.listImages(chosenDirectory.getPath());
+            pathShower.setText(chosenDirectory.getPath() + " " + paths.size());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     public void printFormats(ActionEvent actionEvent) {
@@ -105,5 +116,39 @@ public class PrimaryController {
         image = new Image(imageRow.getImage());
         imageView.setImage(image);
         System.out.println(imageRow.getSize());
+    }
+
+    public void uploadImages(ActionEvent actionEvent) {
+        Map<File, List<Integer>> map = new HashMap<>();
+        if(paths == null)
+            return;
+        try {
+            //List<File> files =
+            Loader.convertToFileList(paths).forEach(file -> map.put(file,null));
+            ImageUploader uploader = new ImageUploader(map);
+
+            progressBar.progressProperty().bind(uploader.progressProperty());
+            progressBar.setStyle("-fx-accent: green;");
+
+            uploader.setOnSucceeded(workerStateEvent -> restoreButtons());
+            uploader.setOnScheduled(workerStateEvent -> blockButtons());
+
+            Thread th = new Thread(uploader);
+            th.setDaemon(true);
+            th.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * When this is invoked make buttons unclickable
+     * **/
+    public void blockButtons(){
+
+    }
+
+    public void restoreButtons(){
+
     }
 }

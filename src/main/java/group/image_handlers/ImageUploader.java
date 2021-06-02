@@ -1,20 +1,41 @@
 package group.image_handlers;
 
-import java.nio.file.Path;
-import java.util.concurrent.Callable;
+import group.DBConnect;
+import group.ImageRow;
+import javafx.concurrent.Task;
 
-public class ImageUploader implements Callable<Integer> {
-    Path path;
-    String[] tags;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
-    public ImageUploader(Path path, String[] tags) {
-        this.path = path;
-        this.tags = tags;
+public class ImageUploader extends Task<Void> {
+
+    Map<File, List<Integer>> tagMap;
+
+    public ImageUploader (Map<File, List<Integer>> map){
+        this.tagMap = map;
     }
 
     @Override
-    public Integer call() throws Exception {
+    protected Void call() throws Exception {
+        int size = tagMap.keySet().size();
+        int workDone = 0;
+        for(Map.Entry<File, List<Integer>> entry: tagMap.entrySet()){
 
-        return 1;
+            /*ImageUploaderCallable callable = new ImageUploaderCallable(entry.getKey());
+            callable.call();*/
+
+            ImageRow imageRow = new ImageRow(entry.getKey());
+            try{
+                DBConnect.insertImage(imageRow);
+                System.out.println(imageRow.getId());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            workDone++;
+            updateProgress(workDone,size);
+            System.out.println(progressProperty());
+        }
+        return null;
     }
 }

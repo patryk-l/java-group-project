@@ -1,9 +1,6 @@
 package group;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.*;
 import java.util.Properties;
 
@@ -52,12 +49,16 @@ public class DBConnect {
         Statement statement = null;
         InputStream fin =imageRow.getImage();
         statement = connection.createStatement();
-        PreparedStatement pre= connection.prepareStatement("insert into images(file, file_size, image_width, image_height) values(?,?,?,?)");
+        PreparedStatement pre= connection.prepareStatement("insert into images(file, file_size, image_width, image_height) values(?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
         pre.setBinaryStream(1,fin);
         pre.setInt(2,imageRow.getSize());
         pre.setInt(3,imageRow.getWidth());
         pre.setInt(4,imageRow.getHeight());
         pre.executeUpdate();
+        ResultSet set = pre.getGeneratedKeys();
+        if(!set.next())
+            throw new SQLException();
+        imageRow.setId(set.getInt(1));
         pre.close();
     }
     public static ImageRow getImage(int id) throws SQLException {

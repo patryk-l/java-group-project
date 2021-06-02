@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Loader {
 
@@ -28,7 +29,7 @@ public class Loader {
     }
 
     public static byte[] getByteArray(BufferedImage image){
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             ImageIO.write(image,"bmp",outputStream);
             return outputStream.toByteArray();
         } catch (IOException e) {
@@ -56,6 +57,10 @@ public class Loader {
             System.err.println(x);
         }
         return list;
+    }
+
+    public static List<File> convertToFileList(List<Path> paths){
+        return paths.stream().map(Path::toFile).collect(Collectors.toList());
     }
 
 }
