@@ -186,4 +186,12 @@ public class PrimaryController {
     public void restoreButtons() {
 
     }
+
+    public void goToTest(ActionEvent actionEvent) {
+        try {
+            App.setRoot("testLayout");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
