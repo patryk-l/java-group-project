@@ -137,10 +137,10 @@ public class DBConnect {
         }
     }
 
-    public static Integer deleteByTag(String tag){
+    public static Integer deleteByTag(String tag) throws SQLException {
         String sql = "select images.id,tags.id " +
                 "from images join images_tags it on images.id = it.image_id join tags on it.tag_id = tags.id " +
-                "where tags.name in (?)";
+                "where tags.name = ?";
         Integer images_delete = 0;
         try(PreparedStatement pre = connection.prepareStatement(sql)){
             pre.setString(1,tag);
@@ -157,8 +157,26 @@ public class DBConnect {
         } catch (SQLException e) {
             System.err.println("Error while attempting to delete by tags");
             e.printStackTrace();
+            throw e;
         }
 
         return images_delete;
+    }
+
+    public static List<Integer> queryImageIdsByTag(String tag) throws SQLException {
+        String sql = "select images.id" +
+                " from images join images_tags on images.id = images_tags.image_id join tags on images_tags.tag_id = tags.id " +
+                "where tags.name = ?";
+        try(PreparedStatement pre = connection.prepareStatement(sql)){
+            ResultSet resultSet = pre.executeQuery();
+            List<Integer> list = new ArrayList<>(resultSet.getInt("count(*)"));
+            while(resultSet.next())
+                list.add(resultSet.getInt(1));
+            return list;
+        } catch (SQLException e) {
+            System.err.println("Error while querying images by tag");
+            e.printStackTrace();
+            throw e;
+        }
     }
 }
