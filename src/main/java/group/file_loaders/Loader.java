@@ -1,25 +1,13 @@
 package group.file_loaders;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
-import javax.imageio.ImageReader;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.metadata.IIOMetadata;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.Raster;
-import java.awt.image.RenderedImage;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.Buffer;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Loader {
@@ -63,4 +51,61 @@ public class Loader {
         return paths.stream().map(Path::toFile).collect(Collectors.toList());
     }
 
+    public static Map<String, List<String>> readCSV(String path, String delimiter,boolean lowerCase){
+        BufferedReader br;
+        Map<String,List<String>> map = new HashMap<>();
+        try {
+            br = new BufferedReader(new FileReader(path));
+            String line;
+            while ((line = br.readLine()) != null && !(line = line.strip()).equals("")) {
+                String[] fields = line.split(delimiter, -1);
+                List<String> lines = Arrays.stream(fields).map(String::strip).filter(String::isEmpty).collect(Collectors.toList());
+                if(lowerCase)
+                    map.put(lines.get(0),lines.subList(1,lines.size()).stream().map(String::toLowerCase).collect(Collectors.toList()));
+                else
+                    map.put(lines.get(0),lines.subList(1, lines.size()));
+            }
+            return map;
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return map;
+    }
+
+    public static Path getCSVPath(String path) throws URISyntaxException {
+        Path csvPath = null;
+        Path directoryPath = Path.of(path);
+        String csvSuffix = "csv";
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directoryPath)) {
+            for (Path file: stream) {
+                if(csvSuffix.equals(file.toString().substring(file.toString().lastIndexOf('.')+1)))
+                    csvPath = file;
+            }
+        } catch (IOException | DirectoryIteratorException x) {
+            System.err.println(x);
+        }
+        return csvPath;
+    }
+
+    public static List<CSVRow> convertCSV(String path) throws URISyntaxException {
+        List<CSVRow> csvRows = new ArrayList<>();
+        String FieldDelimiter = ";";
+        BufferedReader br;
+
+        try {
+            br = new BufferedReader(new FileReader(path));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(FieldDelimiter, -1);
+                csvRows.add(new CSVRow(fields[0], Arrays.copyOfRange(fields, 1, fields.length)));
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return csvRows;
+    }
 }
+

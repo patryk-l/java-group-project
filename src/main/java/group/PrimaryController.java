@@ -11,6 +11,7 @@ import java.util.Map;
 
 import group.file_loaders.Loader;
 import group.image_handlers.ImageUploader;
+import group.file_loaders.CSVRow;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -31,26 +32,28 @@ public class PrimaryController {
     public ProgressBar progressBar;
     public TextField pathShower;
     DirectoryChooser chooser = new DirectoryChooser();
-    File chosenDirectory  = null;
-    List<Path> paths = null;
+    File chosenDirectory = null;
+    List<Path> imagePaths = null;
+    Path csvPath = null;
+    String csvDelimiter = ";";
+    boolean tagsToLowercase = true;
 
     @FXML
     private void switchToSecondary() throws IOException {
         App.setRoot("secondary");
     }
 
-    public void doSomething(ActionEvent actionEvent) {
+    public void doSomething() throws URISyntaxException {
         List<Path> paths = null;
-        textFieldTest.clear();
-        if(chosenDirectory==null)
+        Path csvPath = null;
+        if (chosenDirectory == null)
             return;
         try {
             paths = Loader.listImages(chosenDirectory.getPath());
+            csvPath = Loader.getCSVPath(chosenDirectory.getPath());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        for(Path path : paths)
-            textFieldTest.setText(path.toString()+'\n'+textFieldTest.getText());
 
         //imageView.setImage(Loader.loadToGraphics2D(paths.get(0)));
         try {
@@ -59,24 +62,38 @@ public class PrimaryController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        List<CSVRow> csvRows = Loader.convertCSV(csvPath.toString());
+//        for(Path path : paths)
+//            textFieldTest.setText(path.toString()+'\n'+textFieldTest.getText());
+//
+//        //imageView.setImage(Loader.loadToGraphics2D(paths.get(0)));
+//        try {
+//            Image image = new Image(Files.newInputStream(paths.get(0)));
+//            imageView.setImage(image);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    public void openDirDialog(ActionEvent actionEvent) {
+    public void openDirDialog(ActionEvent actionEvent) throws URISyntaxException {
         chosenDirectory = chooser.showDialog(null);
         try {
-            paths = Loader.listImages(chosenDirectory.getPath());
-            pathShower.setText(chosenDirectory.getPath() + " " + paths.size());
+            imagePaths = Loader.listImages(chosenDirectory.getPath());
+            csvPath = Loader.getCSVPath(chosenDirectory.getPath());
+            pathShower.setText(chosenDirectory.getPath() + " " + imagePaths.size());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        this.doSomething();
     }
 
     public void printFormats(ActionEvent actionEvent) {
         textFieldTest.clear();
-        String[] suffixes= ImageIO.getReaderFileSuffixes();
-        for(String suffix  : suffixes)
-            textFieldTest.setText(suffix+'\n'+textFieldTest.getText());
+        String[] suffixes = ImageIO.getReaderFileSuffixes();
+        for (String suffix : suffixes)
+            textFieldTest.setText(suffix + '\n' + textFieldTest.getText());
     }
+
     public void ConnectToDB() {
         System.out.println("test");
         try {
@@ -86,9 +103,10 @@ public class PrimaryController {
             e.printStackTrace();
         }
     }
-    public void InsertImage(){
+
+    public void InsertImage() {
         List<Path> paths = null;
-        if(chosenDirectory==null)
+        if (chosenDirectory == null)
             return;
         try {
             paths = Loader.listImages(chosenDirectory.getPath());
@@ -97,13 +115,14 @@ public class PrimaryController {
         }
         //imageView.setImage(Loader.loadToGraphics2D(paths.get(0)));
         try {
-            ImageRow imageRow=new ImageRow(new File(String.valueOf(paths.get(0))));
+            ImageRow imageRow = new ImageRow(new File(String.valueOf(paths.get(0))));
             DBConnect.insertImage(imageRow);
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
 
     }
+
     public void showImage() {
         ImageRow imageRow = null;
         try {
@@ -111,7 +130,7 @@ public class PrimaryController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(imageRow==null) return;
+        if (imageRow == null) return;
         Image image;
         image = new Image(imageRow.getImage());
         imageView.setImage(image);
@@ -120,11 +139,27 @@ public class PrimaryController {
 
     public void uploadImages(ActionEvent actionEvent) {
         Map<File, List<Integer>> map = new HashMap<>();
-        if(paths == null)
+        if (imagePaths == null)
             return;
         try {
-            //List<File> files =
-            Loader.convertToFileList(paths).forEach(file -> map.put(file,null));
+            try {
+                Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(csvPath.toString(), csvDelimiter, tagsToLowercase));
+                for (Map.Entry<String, List<Integer>> entry : initialMap.entrySet()) {
+                    if (entry.getKey().contains(File.pathSeparator))
+                        map.put(new File(entry.getKey()), entry.getValue());
+                    else
+                        map.put(new File(chosenDirectory + File.pathSeparator + entry.getKey()), entry.getValue());
+                }
+            } catch (SQLException e) {
+                System.err.println("Error during tag updating");
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.err.println("Error during path processing");
+                e.printStackTrace();
+            }
+
+
+            //Loader.convertToFileList(imagePaths).forEach(file -> map.put(file,null));
             ImageUploader uploader = new ImageUploader(map);
 
             progressBar.progressProperty().bind(uploader.progressProperty());
@@ -143,12 +178,12 @@ public class PrimaryController {
 
     /**
      * When this is invoked make buttons unclickable
-     * **/
-    public void blockButtons(){
+     **/
+    public void blockButtons() {
 
     }
 
-    public void restoreButtons(){
+    public void restoreButtons() {
 
     }
 }

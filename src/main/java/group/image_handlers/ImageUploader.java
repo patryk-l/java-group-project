@@ -12,7 +12,7 @@ public class ImageUploader extends Task<Void> {
 
     Map<File, List<Integer>> tagMap;
 
-    public ImageUploader (Map<File, List<Integer>> map){
+    public ImageUploader(Map<File, List<Integer>> map) {
         this.tagMap = map;
     }
 
@@ -20,20 +20,19 @@ public class ImageUploader extends Task<Void> {
     protected Void call() throws Exception {
         int size = tagMap.keySet().size();
         int workDone = 0;
-        for(Map.Entry<File, List<Integer>> entry: tagMap.entrySet()){
-
-            /*ImageUploaderCallable callable = new ImageUploaderCallable(entry.getKey());
-            callable.call();*/
-
+        for (Map.Entry<File, List<Integer>> entry : tagMap.entrySet()) {
             ImageRow imageRow = new ImageRow(entry.getKey());
-            try{
+            try {
                 DBConnect.insertImage(imageRow);
-                System.out.println(imageRow.getId());
-            }catch (Exception e){
+                //System.out.println(imageRow.getId());
+                if (entry.getValue() != null)
+                    for (Integer tagId : entry.getValue())
+                        DBConnect.insertImageTag(imageRow.getId(), tagId);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             workDone++;
-            updateProgress(workDone,size);
+            updateProgress(workDone, size);
             System.out.println(progressProperty());
         }
         return null;
