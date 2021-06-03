@@ -9,7 +9,7 @@ import java.io.*;
 
 public class ImageRow {
     private IntegerProperty id;
-    private InputStream image;
+    private byte[] image;
     private IntegerProperty size;
     private IntegerProperty width;
     private IntegerProperty height;
@@ -26,39 +26,18 @@ public class ImageRow {
         height.setValue(0);
     }
 
-    /**
-     * FileInputStream powinien być zamknięty (podobnież nawet garbage collection do referencji tego nie gwarantuje)
-     * więc spróbujmy trzymać to w jakimś innym formacie(byte[]) i konwertować w blokach try with resources
-     * try(... InputStream(...))
-     *
-     * konwersja na byte[]:
-     *
-     * stream.readAllBytes()
-     *
-     * konwersja na stream:
-     *
-     * byte[] initialArray = { 0, 1, 2 };
-     * InputStream targetStream = new ByteArrayInputStream(initialArray);
-     * **/
     public ImageRow(File file) throws IOException {
-        image=new FileInputStream(file);
+        FileInputStream fileInputStream=new FileInputStream(file);
+        image=fileInputStream.readAllBytes();
         id=new SimpleIntegerProperty();
         size=new SimpleIntegerProperty();
         width=new SimpleIntegerProperty();
         height=new SimpleIntegerProperty();
         id.setValue(0);
         size.setValue(file.length() / 1024);
-
-//        żeby nie wczytywać pliku dwukrotnie
-//        Po przejściu streama nie można go zresetować, więc trzeba utworzyć ponownie
-
-        /*
-        byte[] bytes = image.readAllBytes();
-        InputStream targetStream = new ByteArrayInputStream(bytes);
+        InputStream targetStream = new ByteArrayInputStream(image);
         BufferedImage bufferedImage = ImageIO.read(targetStream);
-        */
-        BufferedImage bufferedImage = ImageIO.read(new File(String.valueOf(file)));
-
+        fileInputStream.close();
         width.setValue(bufferedImage.getWidth());
         height.setValue(bufferedImage.getHeight());
     }
@@ -72,7 +51,7 @@ public class ImageRow {
     }
 
     public InputStream getImage() {
-        return image;
+        return new ByteArrayInputStream(image);
     }
 
     public int getSize() {
@@ -104,7 +83,11 @@ public class ImageRow {
     }
 
     public void setImage(InputStream image) {
-        this.image = image;
+        try {
+            this.image = image.readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setSize(int size) {
