@@ -136,4 +136,29 @@ public class DBConnect {
             throw e;
         }
     }
+
+    public static Integer deleteByTag(String tag){
+        String sql = "select images.id,tags.id " +
+                "from images join images_tags it on images.id = it.image_id join tags on it.tag_id = tags.id " +
+                "where tags.name in (?)";
+        Integer images_delete = 0;
+        try(PreparedStatement pre = connection.prepareStatement(sql)){
+            pre.setString(1,tag);
+            ResultSet resultSet = pre.executeQuery();
+            while(resultSet.next()){
+                Statement statement = connection.createStatement();
+                statement.executeBatch();
+                statement.addBatch("delete from images where id="+resultSet.getInt(1));
+                statement.addBatch("delete from tags where id="+resultSet.getInt(2));
+                statement.addBatch("delete from images_tags where image_id="+resultSet.getInt(1));
+                images_delete += statement.executeBatch()[0];
+                statement.close();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error while attempting to delete by tags");
+            e.printStackTrace();
+        }
+
+        return images_delete;
+    }
 }
