@@ -44,6 +44,8 @@ public class PrimaryController {
     }
 
     public void doSomething() throws URISyntaxException {
+        textFieldTest.setVisible(false);
+        imageView.setVisible(true);
         List<Path> paths = null;
         Path csvPath = null;
         if (chosenDirectory == null)
@@ -77,17 +79,22 @@ public class PrimaryController {
 
     public void openDirDialog(ActionEvent actionEvent) throws URISyntaxException {
         chosenDirectory = chooser.showDialog(null);
-        try {
-            imagePaths = Loader.listImages(chosenDirectory.getPath());
-            csvPath = Loader.getCSVPath(chosenDirectory.getPath());
-            pathShower.setText(chosenDirectory.getPath() + " " + imagePaths.size());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        if(chosenDirectory!=null){
+            try {
+                imagePaths = Loader.listImages(chosenDirectory.getPath());
+                csvPath = Loader.getCSVPath(chosenDirectory.getPath());
+                //pathShower.setText(chosenDirectory.getPath() + " " + imagePaths.size());
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            this.doSomething();
         }
-        this.doSomething();
+
     }
 
     public void printFormats(ActionEvent actionEvent) {
+        imageView.setVisible(false);
+        textFieldTest.setVisible(true);
         textFieldTest.clear();
         String[] suffixes = ImageIO.getReaderFileSuffixes();
         for (String suffix : suffixes)
