@@ -31,6 +31,9 @@ public class PrimaryController {
     public ImageView imageView;
     public ProgressBar progressBar;
     public TextField pathShower;
+    public Button primaryButton;
+    public Button dirButton;
+    public Button saveButton;
     DirectoryChooser chooser = new DirectoryChooser();
     File chosenDirectory = null;
     List<Path> imagePaths = null;
@@ -42,17 +45,19 @@ public class PrimaryController {
     private void switchToSecondary() throws IOException {
         App.setRoot("secondary");
     }
-
+    public void initialize(){
+        ConnectToDB();
+    }
     public void doSomething() throws URISyntaxException {
         textFieldTest.setVisible(false);
         imageView.setVisible(true);
         List<Path> paths = null;
-        Path csvPath = null;
+        //Path csvPath = null;
         if (chosenDirectory == null)
             return;
         try {
             paths = Loader.listImages(chosenDirectory.getPath());
-            csvPath = Loader.getCSVPath(chosenDirectory.getPath());
+           // csvPath = Loader.getCSVPath(chosenDirectory.getPath());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -64,7 +69,7 @@ public class PrimaryController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        List<CSVRow> csvRows = Loader.convertCSV(csvPath.toString());
+        //List<CSVRow> csvRows = Loader.convertCSV(csvPath.toString());
 //        for(Path path : paths)
 //            textFieldTest.setText(path.toString()+'\n'+textFieldTest.getText());
 //
@@ -127,8 +132,8 @@ public class PrimaryController {
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
-
     }
+
 
     public void showImage() {
         ImageRow imageRow = null;
@@ -150,7 +155,8 @@ public class PrimaryController {
             return;
         try {
             try {
-                Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(csvPath.toString(), csvDelimiter, tagsToLowercase));
+               // Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(csvPath.toString(), csvDelimiter, tagsToLowercase));
+                Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(chosenDirectory.getPath()+"/1.csv", csvDelimiter, tagsToLowercase));
                 for (Map.Entry<String, List<Integer>> entry : initialMap.entrySet()) {
                     if (entry.getKey().contains(File.pathSeparator))
                         map.put(new File(entry.getKey()), entry.getValue());
@@ -165,15 +171,14 @@ public class PrimaryController {
                 e.printStackTrace();
             }
 
-
             //Loader.convertToFileList(imagePaths).forEach(file -> map.put(file,null));
             ImageUploader uploader = new ImageUploader(map);
-
             progressBar.progressProperty().bind(uploader.progressProperty());
             progressBar.setStyle("-fx-accent: green;");
 
-            uploader.setOnSucceeded(workerStateEvent -> restoreButtons());
+            uploader.setOnSucceeded(workerStateEvent -> {progressBar.progressProperty().unbind(); progressBar.setProgress(1);restoreButtons();});
             uploader.setOnScheduled(workerStateEvent -> blockButtons());
+            uploader.setOnFailed(workerStateEvent -> {progressBar.progressProperty().unbind(); progressBar.setProgress(0);restoreButtons();});
 
             Thread th = new Thread(uploader);
             th.setDaemon(true);
@@ -187,11 +192,17 @@ public class PrimaryController {
      * When this is invoked make buttons unclickable
      **/
     public void blockButtons() {
-
+        primaryButton.setDisable(true);
+        testButton.setDisable(true);
+        dirButton.setDisable(true);
+        saveButton.setDisable(true);
     }
 
     public void restoreButtons() {
-
+        primaryButton.setDisable(false);
+        testButton.setDisable(false);
+        dirButton.setDisable(false);
+        saveButton.setDisable(false);
     }
 
     public void goToTest(ActionEvent actionEvent) {

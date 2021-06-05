@@ -1,5 +1,6 @@
 package group;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,6 +15,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.DirectoryChooser;
+
+import javax.imageio.ImageIO;
 
 public class SecondaryController {
     public Button downloadButton;
@@ -32,8 +35,10 @@ public class SecondaryController {
         for(int i=0;i<tags.size();i++){
             try {
                ImageRow temporary=DBConnect.getImage(tags.get(i));
-               File tempFile=new File(path+temporary.getId());
-               Files.copy(temporary.getImage(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+               File tempFile=new File(path+temporary.getId()+".png");
+               BufferedImage bufferedImage=ImageIO.read(temporary.getImage());
+               ImageIO.write(bufferedImage,"png",tempFile);
+              // Files.copy(temporary.getImage(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (SQLException | IOException e) {
                 e.printStackTrace();
             }

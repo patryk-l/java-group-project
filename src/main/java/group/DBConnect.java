@@ -94,7 +94,8 @@ public class DBConnect {
         Set<String> tagSet = fileTagMap.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery("select * from tags");
-            Map<String, Integer> tagMap = new HashMap<>(resultSet.getInt("count(*)"));
+            //Map<String, Integer> tagMap = new HashMap<>(resultSet.getInt("count(*)"));
+            Map<String, Integer> tagMap = new HashMap<>();
             while (resultSet.next()) {
                 String tag = resultSet.getString("name");
                 Integer id = resultSet.getInt("id");

@@ -59,7 +59,12 @@ public class Loader {
             String line;
             while ((line = br.readLine()) != null && !(line = line.strip()).equals("")) {
                 String[] fields = line.split(delimiter, -1);
-                List<String> lines = Arrays.stream(fields).map(String::strip).filter(String::isEmpty).collect(Collectors.toList());
+                System.out.println(fields[0]+" "+fields[1]);
+                List<String> lines=new ArrayList();
+                lines.add(fields[0]);
+                lines.add(fields[1]);
+                //List<String> lines = Arrays.stream(fields).map(String::strip).filter(String::isEmpty).collect(Collectors.toList());
+                System.out.println(lines.get(1));
                 if(lowerCase)
                     map.put(lines.get(0),lines.subList(1,lines.size()).stream().map(String::toLowerCase).collect(Collectors.toList()));
                 else
