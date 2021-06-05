@@ -8,11 +8,11 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.PrimaryController">
    <children>
-      <Button fx:id="primaryButton" layoutX="24.0" layoutY="14.0" onAction="#switchToSecondary" text="Przejdz do zapisywania setów" />
+      <Button fx:id="primaryButton" layoutX="24.0" layoutY="14.0" onAction="#switchToSecondary" text="Przejdź do eksportowania setów" />
       <Button fx:id="dirButton" layoutX="259.0" layoutY="127.0" mnemonicParsing="false" onAction="#openDirDialog" text="Dodaj folder" />
       <Button fx:id="testButton" layoutX="41.0" layoutY="299.0" mnemonicParsing="false" onAction="#doSomething" text="Print" />
       <Button layoutX="41.0" layoutY="337.0" mnemonicParsing="false" onAction="#printFormats" text="Formats" />
-      <Button layoutX="275.0" layoutY="216.0" mnemonicParsing="false" text="Zapisz" />
+      <Button layoutX="275.0" layoutY="216.0" mnemonicParsing="false" text="Importuj" />
 
       <Button layoutX="499.0" layoutY="27.0" mnemonicParsing="false" onAction="#goToTest" text="testLayout" />
 
