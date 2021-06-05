@@ -99,8 +99,10 @@ public class DBConnect {
             while (resultSet.next()) {
                 String tag = resultSet.getString("name");
                 Integer id = resultSet.getInt("id");
-                if (tagSet.remove(tag))
+                if (tagSet.remove(tag)){
                     tagMap.put(tag, id);
+                }
+
             }
             for (String tag : tagSet) {
                 PreparedStatement preparedStatement = connection.prepareStatement("insert into tags(name) values (?)", Statement.RETURN_GENERATED_KEYS);
@@ -112,7 +114,7 @@ public class DBConnect {
                 tagMap.put(tag, rsID.getInt(1));
                 preparedStatement.close();
             }
-            Map<String, List<Integer>> fileTagIdMap = new HashMap<>(fileTagMap.size());
+            Map<String, List<Integer>> fileTagIdMap = new HashMap<>();
             for (Map.Entry<String, List<String>> entry : fileTagMap.entrySet()) {
                 fileTagIdMap.put(entry.getKey(), entry.getValue().stream().map(s -> tagMap.get(s)).collect(Collectors.toList()));
             }
@@ -167,10 +169,10 @@ public class DBConnect {
     public static List<Integer> queryImageIdsByTag(String tag) throws SQLException {
         String sql = "select images.id" +
                 " from images join images_tags on images.id = images_tags.image_id join tags on images_tags.tag_id = tags.id " +
-                "where tags.name = ?";
-        try(PreparedStatement pre = connection.prepareStatement(sql)){
+                "where tags.name = ";
+        try(PreparedStatement pre = connection.prepareStatement(sql+"\""+tag+"\"")){
             ResultSet resultSet = pre.executeQuery();
-            List<Integer> list = new ArrayList<>(resultSet.getInt("count(*)"));
+            List<Integer> list = new ArrayList<>();
             while(resultSet.next())
                 list.add(resultSet.getInt(1));
             return list;

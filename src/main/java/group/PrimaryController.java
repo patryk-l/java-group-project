@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +108,6 @@ public class PrimaryController {
     }
 
     public void ConnectToDB() {
-        System.out.println("test");
         try {
             DBConnect.connectToDB();
             System.out.println("Connected with database");
@@ -146,7 +146,6 @@ public class PrimaryController {
         Image image;
         image = new Image(imageRow.getImage());
         imageView.setImage(image);
-        System.out.println(imageRow.getSize());
     }
 
     public void uploadImages(ActionEvent actionEvent) {
@@ -161,7 +160,7 @@ public class PrimaryController {
                     if (entry.getKey().contains(File.pathSeparator))
                         map.put(new File(entry.getKey()), entry.getValue());
                     else
-                        map.put(new File(chosenDirectory + File.pathSeparator + entry.getKey()), entry.getValue());
+                        map.put(new File(chosenDirectory + "/" + entry.getKey()), entry.getValue());
                 }
             } catch (SQLException e) {
                 System.err.println("Error during tag updating");

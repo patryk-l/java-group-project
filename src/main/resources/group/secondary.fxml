@@ -11,7 +11,7 @@
       <Button layoutX="111.0" layoutY="265.0" mnemonicParsing="false" text="Training set" />
       <Button layoutX="111.0" layoutY="321.0" mnemonicParsing="false" text="Validation set" />
       <Button layoutX="111.0" layoutY="380.0" mnemonicParsing="false" text="Test set" />
-      <ImageView fitHeight="175.0" fitWidth="200.0" layoutX="440.0" layoutY="246.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imageView" fitHeight="175.0" fitWidth="200.0" layoutX="440.0" layoutY="246.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="downloadButton" disable="true" layoutX="527.0" layoutY="105.0" mnemonicParsing="false" onMousePressed="#testFunction" text="Pobierz" />
       <ListView layoutX="240.0" layoutY="17.0" prefHeight="200.0" prefWidth="200.0" />
    </children>
