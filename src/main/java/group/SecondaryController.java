@@ -32,9 +32,11 @@ public class SecondaryController<event> {
     public TextField numberOfImagesTrainingSetTF;
     public TextField numberOfImagesValidationSetTF;
     public TextField numberOfImagesTestSetTF;
+    public Text errorText;
     String path;
     public List<TagRow> tags;
     public int numberOfImages;
+    public int maxNumberOfImages;
 
 
     @FXML
@@ -52,10 +54,19 @@ public class SecondaryController<event> {
                 if (!newValue.matches("\\d*")) {
                     maxNumberOfImagesTF.setText(newValue.replaceAll("[^\\d]", ""));
                 }
-                if (newValue.isEmpty() != true) {
-                    if (Integer.parseInt(newValue) > numberOfImages) {
+                if (newValue.isEmpty() != true && Integer.parseInt(newValue) > numberOfImages) {
                         maxNumberOfImagesTF.setText(newValue.replaceAll("[\\d]", "0"));
-                    }
+                }
+
+                if (newValue.isEmpty() != true) {
+                    maxNumberOfImages = Integer.parseInt(newValue);
+                }
+                if (newValue.isEmpty() || numberOfImagesTrainingSetTF.getText().isEmpty() || numberOfImagesValidationSetTF.getText().isEmpty() || numberOfImagesTestSetTF.getText().isEmpty() ||
+                        ( Integer.parseInt(newValue) < (Integer.parseInt(numberOfImagesTrainingSetTF.getText()) + Integer.parseInt(numberOfImagesValidationSetTF.getText()) +
+                                Integer.parseInt(numberOfImagesTestSetTF.getText()) ) )) {
+                    errorText.setText("Błędna liczba obrazków w setach");
+                } else {
+                    errorText.setText("");
                 }
             }
         });
@@ -66,6 +77,13 @@ public class SecondaryController<event> {
                 if (!newValue.matches("\\d*")) {
                     numberOfImagesTrainingSetTF.setText(newValue.replaceAll("[^\\d]", ""));
                 }
+                 if (maxNumberOfImagesTF.getText().isEmpty() || newValue.isEmpty() || numberOfImagesValidationSetTF.getText().isEmpty() || numberOfImagesTestSetTF.getText().isEmpty() ||
+                         ( Integer.parseInt(maxNumberOfImagesTF.getText()) < (Integer.parseInt(newValue) + Integer.parseInt(numberOfImagesValidationSetTF.getText()) +
+                          Integer.parseInt(numberOfImagesTestSetTF.getText()) ) )) {
+                     errorText.setText("Błędna liczba obrazków w setach");
+                 } else {
+                     errorText.setText("");
+                 }
             }
         });
         numberOfImagesValidationSetTF.textProperty().addListener(new ChangeListener<String>() {
@@ -75,6 +93,13 @@ public class SecondaryController<event> {
                 if (!newValue.matches("\\d*")) {
                     numberOfImagesValidationSetTF.setText(newValue.replaceAll("[^\\d]", ""));
                 }
+                if (maxNumberOfImagesTF.getText().isEmpty() || numberOfImagesTrainingSetTF.getText().isEmpty() || newValue.isEmpty() || numberOfImagesTestSetTF.getText().isEmpty() ||
+                        ( Integer.parseInt(maxNumberOfImagesTF.getText()) < (Integer.parseInt(numberOfImagesTrainingSetTF.getText()) + Integer.parseInt(newValue) +
+                                Integer.parseInt(numberOfImagesTestSetTF.getText()) ) )) {
+                    errorText.setText("Błędna liczba obrazków w setach");
+                } else {
+                    errorText.setText("");
+                }
             }
         });
         numberOfImagesTestSetTF.textProperty().addListener(new ChangeListener<String>() {
@@ -83,6 +108,13 @@ public class SecondaryController<event> {
                                 String newValue) {
                 if (!newValue.matches("\\d*")) {
                     numberOfImagesTestSetTF.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+                if (maxNumberOfImagesTF.getText().isEmpty() || numberOfImagesTrainingSetTF.getText().isEmpty() || numberOfImagesValidationSetTF.getText().isEmpty() || newValue.isEmpty() ||
+                        ( Integer.parseInt(maxNumberOfImagesTF.getText()) < (Integer.parseInt(numberOfImagesTrainingSetTF.getText()) + Integer.parseInt(numberOfImagesValidationSetTF.getText()) +
+                                Integer.parseInt(newValue) ) )) {
+                    errorText.setText("Błędna liczba obrazków w setach");
+                } else {
+                    errorText.setText("");
                 }
             }
         });
