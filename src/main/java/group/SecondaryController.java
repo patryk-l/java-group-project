@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -15,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 
 import javax.imageio.ImageIO;
@@ -22,10 +26,16 @@ import javax.imageio.ImageIO;
 public class SecondaryController<event> {
     public Button downloadButton;
     public ComboBox tagsComboBox;
-    public TextField numberOfImagesTextField;
     public ImageView exampleImageView;
+    public Text numberOfImagesText;
+    public TextField maxNumberOfImagesTF;
+    public TextField numberOfImagesTrainingSetTF;
+    public TextField numberOfImagesValidationSetTF;
+    public TextField numberOfImagesTestSetTF;
     String path;
     public List<TagRow> tags;
+    public int numberOfImages;
+
 
     @FXML
     private void switchToPrimary() throws IOException {
@@ -35,17 +45,59 @@ public class SecondaryController<event> {
     public void initialize() throws SQLException {
         ConnectToDB();
         setComboBoxData();
+        maxNumberOfImagesTF.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    maxNumberOfImagesTF.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+                if (newValue.isEmpty() != true) {
+                    if (Integer.parseInt(newValue) > numberOfImages) {
+                        maxNumberOfImagesTF.setText(newValue.replaceAll("[\\d]", "0"));
+                    }
+                }
+            }
+        });
+        numberOfImagesTrainingSetTF.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    numberOfImagesTrainingSetTF.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        numberOfImagesValidationSetTF.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    numberOfImagesValidationSetTF.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        numberOfImagesTestSetTF.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    numberOfImagesTestSetTF.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
         tagsComboBox.setOnAction((event) -> {
             String selectedTagName = (String) tagsComboBox.getValue();
             TagRow selectedTagRow = tags.stream().filter(tag -> selectedTagName.equals(tag.getName())).findFirst().orElse(null);
             try {
                 List<Integer> imageIds = DBConnect.getImageIdsByTag(selectedTagRow.getId());
                 if (!imageIds.isEmpty()) {
-                    numberOfImagesTextField.setText("Ilość obrazków z wybranym tagiem: " + String.valueOf(imageIds.size()));
+                    numberOfImages = imageIds.size();
+                    numberOfImagesText.setText("Ilość obrazków z wybranym tagiem: " + String.valueOf(numberOfImages));
                     ImageRow exampleImageRow = DBConnect.getImage(imageIds.get(0));
                     exampleImageView.setImage(new Image(exampleImageRow.getImage()));
                 } else {
-                    numberOfImagesTextField.setText("Ilość obrazków z wybranym tagiem: 0");
+                    numberOfImagesText.setText("Ilość obrazków z wybranym tagiem: 0");
                 }
 
 

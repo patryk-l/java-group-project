@@ -5,18 +5,27 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.SecondaryController">
    <children>
       <Button layoutX="14.0" layoutY="24.0" onAction="#switchToPrimary" text="Przejdz do dodawania danych" />
       <Button layoutX="476.0" layoutY="36.0" mnemonicParsing="false" onAction="#openDirDialog" text="Dodaj folder docelowy" />
-      <Button layoutX="310.0" layoutY="334.0" mnemonicParsing="false" text="Training set" />
-      <Button layoutX="306.0" layoutY="380.0" mnemonicParsing="false" text="Validation set" />
+      <Button layoutX="337.0" layoutY="301.0" mnemonicParsing="false" text="Training set" />
+      <Button layoutX="319.0" layoutY="362.0" mnemonicParsing="false" text="Validation set" />
       <Button layoutX="320.0" layoutY="430.0" mnemonicParsing="false" text="Test set" />
-      <ImageView fitHeight="175.0" fitWidth="200.0" layoutX="440.0" layoutY="246.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="downloadButton" disable="true" layoutX="584.0" layoutY="80.0" mnemonicParsing="false" onMousePressed="#testFunction" text="Pobierz" />
       <ComboBox fx:id="tagsComboBox" layoutX="63.0" layoutY="80.0" prefHeight="25.0" prefWidth="174.0" />
-      <TextField fx:id="numberOfImagesTextField" layoutX="54.0" layoutY="130.0" prefHeight="25.0" prefWidth="227.0" text="Ilość obrazków z wybranym tagiem: " />
-      <ImageView fx:id="exampleImageView" fitHeight="150.0" fitWidth="200.0" layoutX="340.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="exampleImageView" fitHeight="150.0" fitWidth="200.0" layoutX="340.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" />
+      <Text layoutX="380.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Przykładowy obrazek" wrappingWidth="119.375" />
+      <Text fx:id="numberOfImagesText" layoutX="63.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość obrazków z wybranym tagiem: " />
+      <TextField fx:id="maxNumberOfImagesTF" layoutX="237.0" layoutY="189.0" prefHeight="25.0" prefWidth="48.0" text="0" />
+      <Text layoutX="35.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maksymalna ilość obrazków" wrappingWidth="152.47540283203125" />
+      <Text layoutX="35.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość obrazków dla training setu" wrappingWidth="167.60003662109386" />
+      <TextField fx:id="numberOfImagesTrainingSetTF" layoutX="237.0" layoutY="234.0" prefHeight="25.0" prefWidth="48.0" text="0" />
+      <Text layoutX="35.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość obrazków dla validation setu" wrappingWidth="183.1855468750001" />
+      <TextField fx:id="numberOfImagesValidationSetTF" layoutX="237.0" layoutY="288.0" prefHeight="25.0" prefWidth="48.0" text="0" />
+      <Text layoutX="35.0" layoutY="354.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość obrazków dla test setu" wrappingWidth="152.47540283203136" />
+      <TextField fx:id="numberOfImagesTestSetTF" layoutX="237.0" layoutY="337.0" prefHeight="25.0" prefWidth="48.0" text="0" />
    </children>
 </Pane>
