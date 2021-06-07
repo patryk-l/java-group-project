@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
@@ -18,13 +19,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 
 import javax.imageio.ImageIO;
 
 public class SecondaryController<event> {
-    public Button downloadButton;
+    public Button exportButton;
     public ComboBox tagsComboBox;
     public ImageView exampleImageView;
     public Text numberOfImagesText;
@@ -33,15 +35,17 @@ public class SecondaryController<event> {
     public TextField numberOfImagesValidationSetTF;
     public TextField numberOfImagesTestSetTF;
     public Text errorText;
-    public Button leftArrayButton;
     public List<Integer> imageIds;
     public Button leftArrow;
     public Button rightArrow;
-    String path;
+    public String trainingDirPath;
+    public String validationDirPath;
+    public String testDirPath;
     public int imageIdsIndex = 0;
     public List<TagRow> tags;
     public int numberOfImages;
     public int maxNumberOfImages;
+    private Random randomGenerator = new Random();
 
 
     @FXML
@@ -155,21 +159,6 @@ public class SecondaryController<event> {
         tagsComboBox.getItems().addAll(nameList);
     }
 
-    public void saveListOfImagesByTagsToDirectory(List<Integer> tags){
-        for(int i=0;i<tags.size();i++){
-            try {
-                ImageRow temporary=DBConnect.getImage(tags.get(i));
-                File tempFile=new File(path+temporary.getId()+".png");
-                BufferedImage bufferedImage=ImageIO.read(temporary.getImage());
-                ImageIO.write(bufferedImage,"png",tempFile);
-                exampleImageView.setImage(new Image(temporary.getImage()));
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
-            }
-        }
-        downloadButton.setDisable(true);
-    }
-
     public void ConnectToDB() {
         System.out.println("test");
         try {
@@ -180,25 +169,18 @@ public class SecondaryController<event> {
         }
     }
 
-    public void openDirDialog(ActionEvent actionEvent) {
+    public String openDirDialog() {
+        String path;
         DirectoryChooser directoryChooser=new DirectoryChooser();
-        File tempFile=directoryChooser.showDialog(null);
-        if(tempFile!=null){
-            path = tempFile.getPath() + "/";
-            downloadButton.setDisable(false);
+        File tempDirectory=directoryChooser.showDialog(null);
+        if(tempDirectory!=null){
+            path = tempDirectory.getPath() + "/";
+            exportButton.setDisable(false);
         }else {
             path="";
-            downloadButton.setDisable(true);
+            exportButton.setDisable(true);
         }
-    }
-
-    public void testFunction(){
-        List<Integer> intList=new ArrayList<>();
-        intList.add(2);
-        intList.add(3);
-        if(!path.equals("")){
-            saveListOfImagesByTagsToDirectory(intList);
-        }
+        return path;
     }
 
     public void onLeftArrowClick(ActionEvent actionEvent) throws SQLException {
@@ -220,6 +202,49 @@ public class SecondaryController<event> {
                 rightArrow.setDisable(true);
             }
             setExampleImageView(imageIds.get(imageIdsIndex));
+        }
+    }
+
+    public void openTrainingDirDialog(ActionEvent actionEvent) {
+        trainingDirPath = openDirDialog();
+    }
+
+    public void openValidationDirDialog(ActionEvent actionEvent) {
+        validationDirPath = openDirDialog();
+    }
+
+    public void openTestDirDialog(ActionEvent actionEvent) {
+        testDirPath = openDirDialog();
+    }
+
+    public void exportImages(MouseEvent mouseEvent) {
+        List<Integer> imageIds2 = new ArrayList<Integer>(imageIds);
+        int numberOfImagesTrainingSet = Integer.parseInt(numberOfImagesTrainingSetTF.getText());
+        int numberOfImagesValidationSet = Integer.parseInt(numberOfImagesValidationSetTF.getText());
+        int numberOfImagesTestSet = Integer.parseInt(numberOfImagesTestSetTF.getText());
+
+        saveRandomImages(numberOfImagesTrainingSet, imageIds2, trainingDirPath);
+        saveRandomImages(numberOfImagesValidationSet, imageIds2, validationDirPath);
+        saveRandomImages(numberOfImagesTestSet, imageIds2, testDirPath);
+    }
+
+    public void saveRandomImages(int numberOfImages, List<Integer> ids, String dirPath){
+        for (int i = 0; i < numberOfImages; i++) {
+            int index = randomGenerator.nextInt(ids.size());
+            int randomId = ids.get(index);
+            saveImageByIdToDirectory(randomId, dirPath);
+            ids.remove(index);
+        }
+    }
+
+    public void saveImageByIdToDirectory(int randomId, String directoryPath){
+        try {
+            ImageRow temporary=DBConnect.getImage(randomId);
+            File tempFile=new File(directoryPath+temporary.getId()+".png");
+            BufferedImage bufferedImage=ImageIO.read(temporary.getImage());
+            ImageIO.write(bufferedImage,"png",tempFile);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
         }
     }
 }
