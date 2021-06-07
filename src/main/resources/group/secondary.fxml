@@ -16,7 +16,7 @@
       <Button layoutX="340.0" layoutY="406.0" mnemonicParsing="false" text="Test set" />
       <Button fx:id="downloadButton" disable="true" layoutX="584.0" layoutY="80.0" mnemonicParsing="false" onMousePressed="#testFunction" text="Pobierz" />
       <ComboBox fx:id="tagsComboBox" layoutX="63.0" layoutY="80.0" prefHeight="25.0" prefWidth="174.0" />
-      <ImageView fx:id="exampleImageView" fitHeight="150.0" fitWidth="200.0" layoutX="340.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="exampleImageView" fitHeight="150.0" fitWidth="200.0" layoutX="380.0" layoutY="146.0" pickOnBounds="true" preserveRatio="true" />
       <Text layoutX="380.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Przykładowy obrazek" wrappingWidth="119.375" />
       <Text fx:id="numberOfImagesText" layoutX="63.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość obrazków z wybranym tagiem: " />
       <TextField fx:id="maxNumberOfImagesTF" layoutX="237.0" layoutY="189.0" prefHeight="25.0" prefWidth="48.0" text="0" />
@@ -28,5 +28,7 @@
       <Text layoutX="35.0" layoutY="354.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość obrazków dla test setu" wrappingWidth="152.47540283203136" />
       <TextField fx:id="numberOfImagesTestSetTF" layoutX="237.0" layoutY="337.0" prefHeight="25.0" prefWidth="48.0" text="0" />
       <Text fx:id="errorText" fill="#fa0000" layoutX="28.0" layoutY="392.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="303.19995880126953" />
+      <Button fx:id="leftArrow" layoutX="314.0" layoutY="202.0" mnemonicParsing="false" onAction="#onLeftArrowClick" text="&lt;-" />
+      <Button fx:id="rightArrow" layoutX="597.0" layoutY="202.0" mnemonicParsing="false" onAction="#onRightArrowClick" text="-&gt;" />
    </children>
 </Pane>

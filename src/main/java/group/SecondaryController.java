@@ -33,7 +33,12 @@ public class SecondaryController<event> {
     public TextField numberOfImagesValidationSetTF;
     public TextField numberOfImagesTestSetTF;
     public Text errorText;
+    public Button leftArrayButton;
+    public List<Integer> imageIds;
+    public Button leftArrow;
+    public Button rightArrow;
     String path;
+    public int imageIdsIndex = 0;
     public List<TagRow> tags;
     public int numberOfImages;
     public int maxNumberOfImages;
@@ -122,12 +127,11 @@ public class SecondaryController<event> {
             String selectedTagName = (String) tagsComboBox.getValue();
             TagRow selectedTagRow = tags.stream().filter(tag -> selectedTagName.equals(tag.getName())).findFirst().orElse(null);
             try {
-                List<Integer> imageIds = DBConnect.getImageIdsByTag(selectedTagRow.getId());
+                imageIds = DBConnect.getImageIdsByTag(selectedTagRow.getId());
                 if (!imageIds.isEmpty()) {
                     numberOfImages = imageIds.size();
                     numberOfImagesText.setText("Ilość obrazków z wybranym tagiem: " + String.valueOf(numberOfImages));
-                    ImageRow exampleImageRow = DBConnect.getImage(imageIds.get(0));
-                    exampleImageView.setImage(new Image(exampleImageRow.getImage()));
+                    setExampleImageView(imageIds.get(imageIdsIndex));
                 } else {
                     numberOfImagesText.setText("Ilość obrazków z wybranym tagiem: 0");
                 }
@@ -137,6 +141,12 @@ public class SecondaryController<event> {
                 throwables.printStackTrace();
             }
         });
+        leftArrow.setDisable(true);
+    }
+
+    public void setExampleImageView(int imageId) throws SQLException {
+        ImageRow exampleImageRow = DBConnect.getImage(imageId);
+        exampleImageView.setImage(new Image(exampleImageRow.getImage()));
     }
 
     public void setComboBoxData() throws SQLException {
@@ -188,6 +198,28 @@ public class SecondaryController<event> {
         intList.add(3);
         if(!path.equals("")){
             saveListOfImagesByTagsToDirectory(intList);
+        }
+    }
+
+    public void onLeftArrowClick(ActionEvent actionEvent) throws SQLException {
+        if (imageIdsIndex != 0) {
+            rightArrow.setDisable(false);
+            imageIdsIndex--;
+            if (imageIdsIndex == 0) {
+                leftArrow.setDisable(true);
+            }
+            setExampleImageView(imageIds.get(imageIdsIndex));
+        }
+    }
+
+    public void onRightArrowClick(ActionEvent actionEvent) throws SQLException {
+        if (imageIdsIndex != (imageIds.size() - 1)) {
+            leftArrow.setDisable(false);
+            imageIdsIndex++;
+            if (imageIdsIndex == (imageIds.size() - 1)) {
+                rightArrow.setDisable(true);
+            }
+            setExampleImageView(imageIds.get(imageIdsIndex));
         }
     }
 }
