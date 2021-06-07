@@ -175,10 +175,8 @@ public class SecondaryController<event> {
         File tempDirectory=directoryChooser.showDialog(null);
         if(tempDirectory!=null){
             path = tempDirectory.getPath() + "/";
-            exportButton.setDisable(false);
         }else {
             path="";
-            exportButton.setDisable(true);
         }
         return path;
     }
