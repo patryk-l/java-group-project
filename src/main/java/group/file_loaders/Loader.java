@@ -61,8 +61,11 @@ public class Loader {
                 String[] fields = line.split(delimiter, -1);
                 System.out.println(fields[0]+" "+fields[1]);
                 List<String> lines=new ArrayList();
-                lines.add(fields[0]);
-                lines.add(fields[1]);
+                //lines.add(fields[0]);
+                //lines.add(fields[1]);
+                for(int i=0;i<fields.length;i++){
+                    lines.add(fields[i]);
+                }
                 //List<String> lines = Arrays.stream(fields).map(String::strip).filter(String::isEmpty).collect(Collectors.toList());
                 System.out.println(lines.get(1));
                 if(lowerCase)
