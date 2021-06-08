@@ -155,12 +155,12 @@ public class PrimaryController {
         try {
             try {
                // Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(csvPath.toString(), csvDelimiter, tagsToLowercase));
-                Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(chosenDirectory.getPath()+"/1.csv", csvDelimiter, tagsToLowercase));
+                Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(chosenDirectory.getPath()+ File.separator +"1.csv", csvDelimiter, tagsToLowercase));
                 for (Map.Entry<String, List<Integer>> entry : initialMap.entrySet()) {
-                    if (entry.getKey().contains(File.pathSeparator))
+                    if (entry.getKey().contains(File.separator))
                         map.put(new File(entry.getKey()), entry.getValue());
                     else
-                        map.put(new File(chosenDirectory + "/" + entry.getKey()), entry.getValue());
+                        map.put(new File(chosenDirectory + File.separator + entry.getKey()), entry.getValue());
                 }
             } catch (SQLException e) {
                 System.err.println("Error during tag updating");
