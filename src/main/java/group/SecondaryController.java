@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -52,6 +53,7 @@ public class SecondaryController<event> {
     public Text trainingSetPathText;
     public Text validationSetPathText;
     public Text testSetPathText;
+    public ProgressBar progressBar;
     private Random randomGenerator = new Random();
 
 
@@ -143,6 +145,7 @@ public class SecondaryController<event> {
                     numberOfImages = imageIds.size();
                     numberOfImagesText.setText("Ilość obrazków z wybranym tagiem: " + String.valueOf(numberOfImages));
                     setExampleImageView(imageIds.get(imageIdsIndex));
+                    rightArrow.setDisable(false);
                 } else {
                     numberOfImagesText.setText("Ilość obrazków z wybranym tagiem: 0");
                 }
@@ -153,6 +156,7 @@ public class SecondaryController<event> {
             }
         });
         leftArrow.setDisable(true);
+        rightArrow.setDisable(true);
     }
 
     public void setExampleImageView(int imageId) throws SQLException {
@@ -245,10 +249,14 @@ public class SecondaryController<event> {
         int numberOfImagesTrainingSet = Integer.parseInt(numberOfImagesTrainingSetTF.getText());
         int numberOfImagesValidationSet = Integer.parseInt(numberOfImagesValidationSetTF.getText());
         int numberOfImagesTestSet = Integer.parseInt(numberOfImagesTestSetTF.getText());
+        progressBar.setStyle("-fx-accent: green;");
+        exportButton.setDisable(true);
 
         saveRandomImages(numberOfImagesTrainingSet, imageIds2, trainingDirPath);
         saveRandomImages(numberOfImagesValidationSet, imageIds2, validationDirPath);
         saveRandomImages(numberOfImagesTestSet, imageIds2, testDirPath);
+        exportButton.setDisable(false);
+        progressBar.setProgress(1);
     }
 
     public void saveRandomImages(int numberOfImages, List<Integer> ids, String dirPath){

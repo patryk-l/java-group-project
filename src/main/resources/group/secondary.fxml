@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -13,7 +14,7 @@
       <Button layoutX="305.0" layoutY="238.0" mnemonicParsing="false" onAction="#openTrainingDirDialog" text="Training set" />
       <Button layoutX="305.0" layoutY="288.0" mnemonicParsing="false" onAction="#openValidationDirDialog" text="Validation set" />
       <Button layoutX="305.0" layoutY="337.0" mnemonicParsing="false" onAction="#openTestDirDialog" text="Test set" />
-      <Button fx:id="exportButton" disable="true" layoutX="465.0" layoutY="412.0" mnemonicParsing="false" onMousePressed="#exportImages" text="Eksportuj" />
+      <Button fx:id="exportButton" disable="true" layoutX="488.0" layoutY="430.0" mnemonicParsing="false" onMousePressed="#exportImages" text="Eksportuj" />
       <ComboBox fx:id="tagsComboBox" layoutX="63.0" layoutY="80.0" prefHeight="25.0" prefWidth="174.0" />
       <ImageView fx:id="exampleImageView" fitHeight="150.0" fitWidth="200.0" layoutX="431.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" />
       <Text layoutX="471.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Przykładowy obrazek" wrappingWidth="119.375" />
@@ -32,5 +33,6 @@
       <Text fx:id="trainingSetPathText" layoutX="400.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="261.3365783691406" />
       <Text fx:id="validationSetPathText" layoutX="400.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="273.3366394042969" />
       <Text fx:id="testSetPathText" layoutX="400.0" layoutY="354.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="273.3366394042969" />
+      <ProgressBar fx:id="progressBar" layoutX="421.0" layoutY="394.0" prefWidth="200.0" progress="0.0" />
    </children>
 </Pane>
