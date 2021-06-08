@@ -172,12 +172,48 @@ public class DBConnect {
                 "where tags.name = ";
         try(PreparedStatement pre = connection.prepareStatement(sql+"\""+tag+"\"")){
             ResultSet resultSet = pre.executeQuery();
+            List<Integer> list = new ArrayList<>(resultSet.getInt("count(*)"));
+            while(resultSet.next())
+                list.add(resultSet.getInt(1));
+            return list;
+        } catch (SQLException e) {
+            System.err.println("Error while getting images by tag");
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public static List<Integer> getImageIdsByTag(int tagId) throws SQLException {
+        String sql = "select images.id" +
+                " from images join images_tags on images.id = images_tags.image_id join tags on images_tags.tag_id = tags.id " +
+                "where tags.id = " + tagId;
+        try(PreparedStatement pre = connection.prepareStatement(sql)){
+            ResultSet resultSet = pre.executeQuery();
             List<Integer> list = new ArrayList<>();
             while(resultSet.next())
                 list.add(resultSet.getInt(1));
             return list;
         } catch (SQLException e) {
-            System.err.println("Error while querying images by tag");
+            System.err.println("Error while getting images by tag");
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public static List<TagRow> getAllTags() throws SQLException {
+        String sql = "select * from tags";
+        try(PreparedStatement pre = connection.prepareStatement(sql)){
+            ResultSet resultSet = pre.executeQuery();
+            List<TagRow> list = new ArrayList<>();
+            while (resultSet.next()) {
+                TagRow tagRow = new TagRow();
+                tagRow.setId(resultSet.getInt("id"));
+                tagRow.setName(resultSet.getString("name"));
+                list.add(tagRow);
+            }
+            return list;
+        } catch (SQLException e) {
+            System.err.println("Error while getting all tags");
             e.printStackTrace();
             throw e;
         }
