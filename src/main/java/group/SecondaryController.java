@@ -42,13 +42,16 @@ public class SecondaryController<event> {
     public List<Integer> imageIds;
     public Button leftArrow;
     public Button rightArrow;
-    public String trainingDirPath;
-    public String validationDirPath;
-    public String testDirPath;
+    public String trainingDirPath = "";
+    public String validationDirPath = "";
+    public String testDirPath = "";
     public int imageIdsIndex = 0;
     public List<TagRow> tags;
     public int numberOfImages;
     public int maxNumberOfImages;
+    public Text trainingSetPathText;
+    public Text validationSetPathText;
+    public Text testSetPathText;
     private Random randomGenerator = new Random();
 
 
@@ -209,14 +212,32 @@ public class SecondaryController<event> {
 
     public void openTrainingDirDialog(ActionEvent actionEvent) {
         trainingDirPath = openDirDialog();
+        trainingSetPathText.setText(trainingDirPath);
+        if (trainingDirPath == "" || validationDirPath == "" || testDirPath == "") {
+            exportButton.setDisable(true);
+        } else {
+            exportButton.setDisable(false);
+        }
     }
 
     public void openValidationDirDialog(ActionEvent actionEvent) {
         validationDirPath = openDirDialog();
+        validationSetPathText.setText(validationDirPath);
+        if (trainingDirPath == "" || validationDirPath == "" || testDirPath == "") {
+            exportButton.setDisable(true);
+        } else {
+            exportButton.setDisable(false);
+        }
     }
 
     public void openTestDirDialog(ActionEvent actionEvent) {
         testDirPath = openDirDialog();
+        testSetPathText.setText(testDirPath);
+        if (trainingDirPath == "" || validationDirPath == "" || testDirPath == "") {
+            exportButton.setDisable(true);
+        } else {
+            exportButton.setDisable(false);
+        }
     }
 
     public void exportImages(MouseEvent mouseEvent) {

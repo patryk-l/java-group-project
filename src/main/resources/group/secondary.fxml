@@ -7,16 +7,16 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.SecondaryController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.SecondaryController">
    <children>
       <Button layoutX="14.0" layoutY="24.0" onAction="#switchToPrimary" text="Przejdz do importowania danych" />
-      <Button layoutX="35.0" layoutY="418.0" mnemonicParsing="false" onAction="#openTrainingDirDialog" text="Training set" />
-      <Button layoutX="193.0" layoutY="417.0" mnemonicParsing="false" onAction="#openValidationDirDialog" text="Validation set" />
-      <Button layoutX="340.0" layoutY="406.0" mnemonicParsing="false" onAction="#openTestDirDialog" text="Test set" />
-      <Button fx:id="downloadButton" layoutX="499.0" layoutY="417.0" mnemonicParsing="false" onMousePressed="#exportImages" text="Eksportuj" />
+      <Button layoutX="305.0" layoutY="238.0" mnemonicParsing="false" onAction="#openTrainingDirDialog" text="Training set" />
+      <Button layoutX="305.0" layoutY="288.0" mnemonicParsing="false" onAction="#openValidationDirDialog" text="Validation set" />
+      <Button layoutX="305.0" layoutY="337.0" mnemonicParsing="false" onAction="#openTestDirDialog" text="Test set" />
+      <Button fx:id="exportButton" disable="true" layoutX="465.0" layoutY="412.0" mnemonicParsing="false" onMousePressed="#exportImages" text="Eksportuj" />
       <ComboBox fx:id="tagsComboBox" layoutX="63.0" layoutY="80.0" prefHeight="25.0" prefWidth="174.0" />
-      <ImageView fx:id="exampleImageView" fitHeight="150.0" fitWidth="200.0" layoutX="380.0" layoutY="146.0" pickOnBounds="true" preserveRatio="true" />
-      <Text layoutX="380.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Przykładowy obrazek" wrappingWidth="119.375" />
+      <ImageView fx:id="exampleImageView" fitHeight="150.0" fitWidth="200.0" layoutX="431.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" />
+      <Text layoutX="471.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Przykładowy obrazek" wrappingWidth="119.375" />
       <Text fx:id="numberOfImagesText" layoutX="63.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość obrazków z wybranym tagiem: " />
       <TextField fx:id="maxNumberOfImagesTF" layoutX="237.0" layoutY="189.0" prefHeight="25.0" prefWidth="48.0" text="0" />
       <Text layoutX="35.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maksymalna ilość obrazków" wrappingWidth="152.47540283203125" />
@@ -26,8 +26,11 @@
       <TextField fx:id="numberOfImagesValidationSetTF" layoutX="237.0" layoutY="288.0" prefHeight="25.0" prefWidth="48.0" text="0" />
       <Text layoutX="35.0" layoutY="354.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość obrazków dla test setu" wrappingWidth="152.47540283203136" />
       <TextField fx:id="numberOfImagesTestSetTF" layoutX="237.0" layoutY="337.0" prefHeight="25.0" prefWidth="48.0" text="0" />
-      <Text fx:id="errorText" fill="#fa0000" layoutX="28.0" layoutY="392.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="303.19995880126953" />
-      <Button fx:id="leftArrow" layoutX="314.0" layoutY="202.0" mnemonicParsing="false" onAction="#onLeftArrowClick" text="&lt;-" />
-      <Button fx:id="rightArrow" layoutX="597.0" layoutY="202.0" mnemonicParsing="false" onAction="#onRightArrowClick" text="-&gt;" />
+      <Text fx:id="errorText" fill="#fa0000" layoutX="51.0" layoutY="416.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="303.19995880126953" />
+      <Button fx:id="leftArrow" layoutX="392.0" layoutY="118.0" mnemonicParsing="false" onAction="#onLeftArrowClick" text="&lt;-" />
+      <Button fx:id="rightArrow" layoutX="644.0" layoutY="118.0" mnemonicParsing="false" onAction="#onRightArrowClick" text="-&gt;" />
+      <Text fx:id="trainingSetPathText" layoutX="400.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="261.3365783691406" />
+      <Text fx:id="validationSetPathText" layoutX="400.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="273.3366394042969" />
+      <Text fx:id="testSetPathText" layoutX="400.0" layoutY="354.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="273.3366394042969" />
    </children>
 </Pane>

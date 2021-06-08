@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.PrimaryController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.PrimaryController">
    <children>
       <Button fx:id="primaryButton" layoutX="24.0" layoutY="14.0" onAction="#switchToSecondary" text="Przejdź do eksportowania setów" />
-      <Button fx:id="dirButton" layoutX="259.0" layoutY="127.0" mnemonicParsing="false" onAction="#openDirDialog" text="Dodaj folder" />
-      <Button fx:id="testButton" layoutX="41.0" layoutY="299.0" mnemonicParsing="false" onAction="#doSomething" text="Print" />
-      <Button layoutX="41.0" layoutY="337.0" mnemonicParsing="false" onAction="#printFormats" text="Formats" />
-      <Button fx:id="saveButton" layoutX="275.0" layoutY="216.0" mnemonicParsing="false" onAction="#uploadImages" text="Importuj" />
+      <Button fx:id="dirButton" layoutX="307.0" layoutY="64.0" mnemonicParsing="false" onAction="#openDirDialog" text="Dodaj folder" />
 
-      <Button layoutX="499.0" layoutY="27.0" mnemonicParsing="false" onAction="#goToTest" text="testLayout" />
-
-      <AnchorPane layoutX="232.0" layoutY="251.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="137.0">
+      <AnchorPane layoutX="231.0" layoutY="232.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="219.0" prefWidth="238.0">
          <children>
-            <ImageView fx:id="imageView" fitHeight="130.0" fitWidth="137.0" layoutX="2.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+            <ImageView fx:id="imageView" fitHeight="219.0" fitWidth="238.0" layoutX="2.0" pickOnBounds="true" preserveRatio="true" visible="false" />
             <TextArea fx:id="textFieldTest" layoutX="-2.0" layoutY="-5.0" prefHeight="130.0" prefWidth="137.0" visible="false" />
          </children>
       </AnchorPane>
-      <ProgressBar fx:id="progressBar" layoutX="201.0" layoutY="180.0" prefWidth="200.0" progress="0.0" />
+      <ProgressBar fx:id="progressBar" layoutX="249.0" layoutY="154.0" prefWidth="200.0" progress="0.0" />
+      <Button fx:id="saveButton" layoutX="318.0" layoutY="188.0" mnemonicParsing="false" onAction="#uploadImages" text="Importuj" />
+      <Text fx:id="pathText" layoutX="247.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="206.13671875" />
    </children>
 </Pane>

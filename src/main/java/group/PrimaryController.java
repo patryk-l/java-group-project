@@ -21,6 +21,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 
 import javax.imageio.ImageIO;
@@ -35,6 +36,7 @@ public class PrimaryController {
     public Button primaryButton;
     public Button dirButton;
     public Button saveButton;
+    public Text pathText;
     DirectoryChooser chooser = new DirectoryChooser();
     File chosenDirectory = null;
     List<Path> imagePaths = null;
@@ -89,7 +91,7 @@ public class PrimaryController {
             try {
                 imagePaths = Loader.listImages(chosenDirectory.getPath());
                 csvPath = Loader.getCSVPath(chosenDirectory.getPath());
-                //pathShower.setText(chosenDirectory.getPath() + " " + imagePaths.size());
+                pathText.setText(chosenDirectory.getPath() + "\nIlość obrazków: " + imagePaths.size());
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -192,14 +194,12 @@ public class PrimaryController {
      **/
     public void blockButtons() {
         primaryButton.setDisable(true);
-        testButton.setDisable(true);
         dirButton.setDisable(true);
         saveButton.setDisable(true);
     }
 
     public void restoreButtons() {
         primaryButton.setDisable(false);
-        testButton.setDisable(false);
         dirButton.setDisable(false);
         saveButton.setDisable(false);
     }
