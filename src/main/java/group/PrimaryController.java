@@ -5,10 +5,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import group.file_loaders.Loader;
 import group.image_handlers.ImageUploader;
@@ -49,7 +46,24 @@ public class PrimaryController {
         App.setRoot("secondary");
     }
     public void initialize(){
-        ConnectToDB();
+        Properties defaults = new Properties();
+        //defaults.setProperty("user", "root");
+        //defaults.setProperty("password", "");
+        Properties properties = new Properties(defaults);
+        try (InputStream input = App.class.getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                System.out.println("Sorry, unable to find config.properties");
+                return;
+            }
+
+            properties.load(input);
+            for(Map.Entry entry :properties.entrySet())
+                System.out.println(entry.getKey() + " " + entry.getValue());
+            DBConnect.connectToDB(properties);
+
+        } catch (IOException | SQLException ex) {
+            ex.printStackTrace();
+        }
     }
     public void doSomething() throws URISyntaxException {
         textFieldTest.setVisible(false);

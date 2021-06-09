@@ -24,6 +24,18 @@ public class DBConnect {
         }
     }
 
+    public static void connectToDB(Properties properties) throws SQLException {
+        //String url = "jdbc:mysql://localhost/MachineLearning";
+        try {
+            //connection = DriverManager.getConnection(url, properties);
+            connection = DriverManager.getConnection(properties.getProperty("db.url"),properties.getProperty("db.user"),properties.getProperty("db.password"));
+        } catch (SQLException e) {
+            System.out.println("Error when connecting to database");
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     public static void disconnectDB() throws SQLException {
         try {
             connection.close();
