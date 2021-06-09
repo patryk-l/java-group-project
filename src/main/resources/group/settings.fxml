@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.SettingsController">
+   <children>
+      <TextField fx:id="connectionString" layoutX="209.0" layoutY="62.0" />
+      <TextField fx:id="username" layoutX="209.0" layoutY="106.0" />
+      <PasswordField fx:id="password" accessibleRole="TEXT" layoutX="209.0" layoutY="153.0" />
+      <Label layoutX="35.0" layoutY="67.0" text="Adres serwera MariaDB" />
+      <Label layoutX="34.0" layoutY="111.0" text="Nazwa użytkownika" />
+      <Label layoutX="34.0" layoutY="158.0" text="Hasło" />
+      <Button layoutX="329.0" layoutY="214.0" mnemonicParsing="false" onMousePressed="#save" text="Zapisz" />
+      <Button layoutX="232.0" layoutY="214.0" mnemonicParsing="false" onMousePressed="#switchToPrimary" text="Anuluj" />
+      <Button layoutX="35.0" layoutY="23.0" mnemonicParsing="false" onMousePressed="#switchToPrimary" text="Cofnij do strony głównej" />
+      <Button layoutX="68.0" layoutY="275.0" mnemonicParsing="false" onMousePressed="#CheckConnectionToDB" text="Test połączenia z bazą" />
+      <Label fx:id="status" layoutX="262.0" layoutY="280.0" text="Text" visible="false" />
+   </children>
+</Pane>
