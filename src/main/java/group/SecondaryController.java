@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -55,6 +56,7 @@ public class SecondaryController<event> {
     public Text testSetPathText;
     public ProgressBar progressBar;
     private Random randomGenerator = new Random();
+    private int loopCounter;
 
 
     @FXML
@@ -246,21 +248,23 @@ public class SecondaryController<event> {
 
     public void exportImages(MouseEvent mouseEvent) {
         List<Integer> imageIds2 = new ArrayList<Integer>(imageIds);
+        loopCounter=0;
+        progressBar.setProgress(0);
         int numberOfImagesTrainingSet = Integer.parseInt(numberOfImagesTrainingSetTF.getText());
         int numberOfImagesValidationSet = Integer.parseInt(numberOfImagesValidationSetTF.getText());
         int numberOfImagesTestSet = Integer.parseInt(numberOfImagesTestSetTF.getText());
         progressBar.setStyle("-fx-accent: green;");
         exportButton.setDisable(true);
-
         saveRandomImages(numberOfImagesTrainingSet, imageIds2, trainingDirPath);
         saveRandomImages(numberOfImagesValidationSet, imageIds2, validationDirPath);
         saveRandomImages(numberOfImagesTestSet, imageIds2, testDirPath);
         exportButton.setDisable(false);
-        progressBar.setProgress(1);
+        //progressBar.setProgress(1);
     }
 
     public void saveRandomImages(int numberOfImages, List<Integer> ids, String dirPath){
         for (int i = 0; i < numberOfImages; i++) {
+            moveProgressBar();
             int index = randomGenerator.nextInt(ids.size());
             int randomId = ids.get(index);
             saveImageByIdToDirectory(randomId, dirPath);
@@ -277,5 +281,10 @@ public class SecondaryController<event> {
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void moveProgressBar(){
+        loopCounter++;
+        progressBar.setProgress((double)loopCounter/maxNumberOfImages);
     }
 }
