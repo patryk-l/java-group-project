@@ -16,15 +16,13 @@ import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ProgressBar;
+import javafx.collections.ListChangeListener;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -55,6 +53,7 @@ public class SecondaryController<event> {
     public Text validationSetPathText;
     public Text testSetPathText;
     public ProgressBar progressBar;
+    public ListView tagsListView;
     private Random randomGenerator = new Random();
     private int loopCounter;
 
@@ -138,27 +137,54 @@ public class SecondaryController<event> {
                 }
             }
         });
-        tagsComboBox.setOnAction((event) -> {
-            String selectedTagName = (String) tagsComboBox.getValue();
-            TagRow selectedTagRow = tags.stream().filter(tag -> selectedTagName.equals(tag.getName())).findFirst().orElse(null);
-            try {
-                imageIds = DBConnect.getImageIdsByTag(selectedTagRow.getId());
-                if (!imageIds.isEmpty()) {
-                    numberOfImages = imageIds.size();
-                    numberOfImagesText.setText("Ilość obrazków z wybranym tagiem: " + String.valueOf(numberOfImages));
-                    setExampleImageView(imageIds.get(imageIdsIndex));
-                    rightArrow.setDisable(false);
-                } else {
-                    numberOfImagesText.setText("Ilość obrazków z wybranym tagiem: 0");
+        tagsListView.getItems().addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(ListChangeListener.Change change) {
+                List<String> selectedTagNames = tagsListView.getItems();
+                List<Integer> selectedTagIds = new ArrayList<Integer>();
+                selectedTagNames.forEach((String tagName) -> {
+                    selectedTagIds.add(tags.stream().filter(tag -> tagName.equals(tag.getName())).findFirst().orElse(null).getId());
+                });
+                try {
+                    imageIds = DBConnect.getImageIdsByTags(selectedTagIds);
+                    if (!imageIds.isEmpty()) {
+                        numberOfImages = imageIds.size();
+                        numberOfImagesText.setText("Ilość obrazków z wybranymi tagami: " + String.valueOf(numberOfImages));
+                        imageIdsIndex = 0;
+                        setExampleImageView(imageIds.get(imageIdsIndex));
+                        if (imageIds.size() == 1) {
+                            rightArrow.setDisable(true);
+                        } else {
+                            rightArrow.setDisable(false);
+                        }
+                        cleanForm();
+                    } else {
+                        numberOfImagesText.setText("Ilość obrazków z wybranym tagiem: 0");
+                    }
+
+
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
                 }
 
-
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
             }
         });
         leftArrow.setDisable(true);
         rightArrow.setDisable(true);
+    }
+
+    public void cleanForm() {
+        maxNumberOfImagesTF.setText("0");
+        numberOfImagesTrainingSetTF.setText("0");
+        numberOfImagesValidationSetTF.setText("0");
+        numberOfImagesTestSetTF.setText("0");
+        trainingDirPath = "";
+        trainingSetPathText.setText(trainingDirPath);
+        validationDirPath = "";
+        validationSetPathText.setText(validationDirPath);
+        testDirPath = "";
+        testSetPathText.setText(testDirPath);
+        progressBar.setProgress(0);
     }
 
     public void setExampleImageView(int imageId) throws SQLException {
@@ -286,5 +312,18 @@ public class SecondaryController<event> {
     private void moveProgressBar(){
         loopCounter++;
         progressBar.setProgress((double)loopCounter/maxNumberOfImages);
+    }
+
+    public void addTag(ActionEvent actionEvent) {
+        tagsListView.getItems().add(tagsComboBox.getValue());
+        tagsComboBox.getItems().remove(tagsComboBox.getValue());
+    }
+
+    public void removeTagFromList(MouseEvent mouseEvent) {
+        tagsComboBox.getItems().add(tagsListView.getSelectionModel().getSelectedItem());
+        tagsListView.getItems().remove(tagsListView.getSelectionModel().getSelectedItem());
+        if (tagsListView.getItems().size() == 0) {
+            numberOfImagesText.setText("Ilość obrazków z wybranymi tagami: 0");
+        }
     }
 }

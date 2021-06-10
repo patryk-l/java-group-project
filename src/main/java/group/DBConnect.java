@@ -195,16 +195,25 @@ public class DBConnect {
         }
     }
 
-    public static List<Integer> getImageIdsByTag(int tagId) throws SQLException {
+    public static List<Integer> getImageIdsByTags(List<Integer> selectedTagIds) throws SQLException {
         String sql = "select images.id" +
-                " from images join images_tags on images.id = images_tags.image_id join tags on images_tags.tag_id = tags.id " +
-                "where tags.id = " + tagId;
+                " from images join images_tags on images.id = images_tags.image_id join tags on images_tags.tag_id = tags.id ";
+
+        for (int i = 0; i < selectedTagIds.size(); i++) {
+            if (i == 0) {
+                sql += "where tags.id = " + selectedTagIds.get(i);
+            } else {
+                sql += " or tags.id = " + selectedTagIds.get(i);
+            }
+        }
+        sql += ";";
         try(PreparedStatement pre = connection.prepareStatement(sql)){
             ResultSet resultSet = pre.executeQuery();
             List<Integer> list = new ArrayList<>();
             while(resultSet.next())
                 list.add(resultSet.getInt(1));
-            return list;
+
+            return list.stream().distinct().collect(Collectors.toList());
         } catch (SQLException e) {
             System.err.println("Error while getting images by tag");
             e.printStackTrace();
