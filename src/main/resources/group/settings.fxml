@@ -17,6 +17,6 @@
       <Button layoutX="40.0" layoutY="275.0" mnemonicParsing="false" onMousePressed="#CheckConnectionToDB" text="Test połączenia z bazą" />
       <Label fx:id="status" layoutX="232.0" layoutY="280.0" text="Text" visible="false" />
       <Button layoutX="40.0" layoutY="314.0" mnemonicParsing="false" onMouseClicked="#PrepareDB" text="Przygotowanie bazy" />
-      <Label layoutX="232.0" layoutY="317.0" text="Ta opcja nadpisze schemat MachineLearining (o ile on istnieje w bazie)" />
+      <Label layoutX="232.0" layoutY="317.0" text="Ta opcja nadpisze schemat MachineLearning (o ile istnieje on w bazie)" />
    </children>
 </Pane>
