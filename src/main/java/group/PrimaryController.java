@@ -45,24 +45,36 @@ public class PrimaryController {
     private void switchToSecondary() throws IOException {
         App.setRoot("secondary");
     }
+    @FXML
+    private void switchToSettings()  {
+        try {
+            App.setRoot("settings");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void initialize(){
-        Properties defaults = new Properties();
-        //defaults.setProperty("user", "root");
-        //defaults.setProperty("password", "");
-        Properties properties = new Properties(defaults);
-        try (InputStream input = App.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (input == null) {
-                System.out.println("Sorry, unable to find config.properties");
-                return;
-            }
-
-            properties.load(input);
-            for(Map.Entry entry :properties.entrySet())
-                System.out.println(entry.getKey() + " " + entry.getValue());
+        FileInputStream inputStream=null;
+        try {
+            inputStream=new FileInputStream(".config");
+        } catch (FileNotFoundException e) {
+            switchToSettings();
+            return;
+        }
+        Properties properties=new Properties();
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        properties.setProperty("db.url","jdbc:mysql://"+properties.getProperty("db.url")+"/MachineLearning");
+        String password=properties.getProperty("db.password");
+        byte[] decodedBytes = Base64.getDecoder().decode(password);
+        properties.setProperty("db.password",new String(decodedBytes));
+        try {
             DBConnect.connectToDB(properties);
-
-        } catch (IOException | SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
     public void doSomething() throws URISyntaxException {

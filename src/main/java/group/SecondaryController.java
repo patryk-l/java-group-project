@@ -64,7 +64,7 @@ public class SecondaryController<event> {
     }
 
     public void initialize() throws SQLException {
-        ConnectToDB();
+        //ConnectToDB();
         setComboBoxData();
         maxNumberOfImagesTF.textProperty().addListener(new ChangeListener<String>() {
             @Override
