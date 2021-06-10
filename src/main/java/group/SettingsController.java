@@ -31,7 +31,7 @@ public class SettingsController  {
         try {
             inputStream=new FileInputStream(".config");
         } catch (FileNotFoundException e) {
-            connectionString.setText("jdbc:mysql://localhost/MachineLearning");
+            connectionString.setText("localhost");
             username.setText("root");
             if(save()){
                 initialize();
@@ -77,7 +77,7 @@ public class SettingsController  {
 
     public void CheckConnectionToDB() {
         Properties properties=new Properties();
-        properties.setProperty("db.url", connectionString.getText());
+        properties.setProperty("db.url", "jdbc:mysql://"+connectionString.getText());
         properties.setProperty("db.user", username.getText());
         properties.setProperty("db.password", password.getText());
 
@@ -96,5 +96,33 @@ public class SettingsController  {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public void PrepareDB() throws SQLException {
+        Properties properties=new Properties();
+        properties.setProperty("db.url", "jdbc:mysql://"+connectionString.getText());
+        properties.setProperty("db.user", username.getText());
+        properties.setProperty("db.password", password.getText());
+        DBConnect.connectToDB(properties);
+        DBConnect.executeJDML("drop schema MachineLearning;");
+        DBConnect.executeJDML("create schema MachineLearning;" );
+        DBConnect.disconnectDB();
+        properties.setProperty("db.url", "jdbc:mysql://"+connectionString.getText()+"/MachineLearning");
+        DBConnect.connectToDB(properties);
+        DBConnect.executeJDML("create table images(" +
+                "id int AUTO_INCREMENT," +
+                "file longblob not null, " +
+                "file_size int not null," +
+                "image_width int not null," +
+                "image_height int not null, " +
+                "primary key(id));");
+        DBConnect.executeJDML("create table tags(" +
+                "id int auto_increment," +
+                "name varchar(15)," +
+                "primary key(id));");
+        DBConnect.executeJDML("create table images_tags(" +
+                "image_id int not null," +
+                "tag_id int not null," +
+                "constraint fk_image_id foreign key(image_id) references images(id)," +
+                "constraint fk_tag_id foreign key(tag_id) references tags(id));");
     }
 }

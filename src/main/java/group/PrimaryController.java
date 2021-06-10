@@ -67,6 +67,7 @@ public class PrimaryController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        properties.setProperty("db.url","jdbc:mysql://"+properties.getProperty("db.url")+"/MachineLearning");
         String password=properties.getProperty("db.password");
         byte[] decodedBytes = Base64.getDecoder().decode(password);
         properties.setProperty("db.password",new String(decodedBytes));

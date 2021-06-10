@@ -14,7 +14,9 @@
       <Button layoutX="329.0" layoutY="214.0" mnemonicParsing="false" onMousePressed="#save" text="Zapisz" />
       <Button layoutX="232.0" layoutY="214.0" mnemonicParsing="false" onMousePressed="#switchToPrimary" text="Anuluj" />
       <Button layoutX="35.0" layoutY="23.0" mnemonicParsing="false" onMousePressed="#switchToPrimary" text="Cofnij do strony głównej" />
-      <Button layoutX="68.0" layoutY="275.0" mnemonicParsing="false" onMousePressed="#CheckConnectionToDB" text="Test połączenia z bazą" />
-      <Label fx:id="status" layoutX="262.0" layoutY="280.0" text="Text" visible="false" />
+      <Button layoutX="40.0" layoutY="275.0" mnemonicParsing="false" onMousePressed="#CheckConnectionToDB" text="Test połączenia z bazą" />
+      <Label fx:id="status" layoutX="232.0" layoutY="280.0" text="Text" visible="false" />
+      <Button layoutX="40.0" layoutY="314.0" mnemonicParsing="false" onMouseClicked="#PrepareDB" text="Przygotowanie bazy" />
+      <Label layoutX="232.0" layoutY="317.0" text="Ta opcja nadpisze schemat MachineLearining (o ile on istnieje w bazie)" />
    </children>
 </Pane>
