@@ -69,7 +69,7 @@ public class ImageDownloader extends Task<Void> {
                     try (InputStream stream = temporary.getImage()) {
                         BufferedImage bufferedImage = ImageIO.read(stream);
                         ImageIO.write(bufferedImage, format, tempFile);
-                        csvOutput.write((temporary.getId()//+"."+format
+                        csvOutput.write((temporary.getId()+"."+format
                                 + tags.stream().reduce("", (s, s2) -> s + delimiter + s2))
                                 .getBytes(Charset.defaultCharset()));
                     } catch (Exception e) {
