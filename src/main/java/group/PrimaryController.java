@@ -34,6 +34,7 @@ public class PrimaryController {
     public Button dirButton;
     public Button saveButton;
     public Text pathText;
+    public Button settingsButton;
     DirectoryChooser chooser = new DirectoryChooser();
     File chosenDirectory = null;
     List<Path> imagePaths = null;
@@ -58,7 +59,9 @@ public class PrimaryController {
         try {
             inputStream=new FileInputStream(".config");
         } catch (FileNotFoundException e) {
-            switchToSettings();
+            //switchToSettings();
+            blockButtons();
+            settingsButton.setDisable(false);
             return;
         }
         Properties properties=new Properties();
@@ -182,8 +185,8 @@ public class PrimaryController {
             return;
         try {
             try {
-               // Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(csvPath.toString(), csvDelimiter, tagsToLowercase));
-                Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(chosenDirectory.getPath()+ File.separator +"1.csv", csvDelimiter, tagsToLowercase));
+                Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(csvPath.toString(), csvDelimiter, tagsToLowercase));
+//                Map<String, List<Integer>> initialMap = DBConnect.updateTagsAndGetIds(Loader.readCSV(chosenDirectory.getPath()+ File.separator +"1.csv", csvDelimiter, tagsToLowercase));
                 for (Map.Entry<String, List<Integer>> entry : initialMap.entrySet()) {
                     if (entry.getKey().contains(File.separator))
                         map.put(new File(entry.getKey()), entry.getValue());
@@ -222,12 +225,14 @@ public class PrimaryController {
         primaryButton.setDisable(true);
         dirButton.setDisable(true);
         saveButton.setDisable(true);
+        settingsButton.setDisable(true);
     }
 
     public void restoreButtons() {
         primaryButton.setDisable(false);
         dirButton.setDisable(false);
         saveButton.setDisable(false);
+        settingsButton.setDisable(false);
     }
 
     public void goToTest(ActionEvent actionEvent) {
