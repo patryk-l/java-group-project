@@ -3,19 +3,15 @@ package group;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import group.image_handlers.ImageDownloader;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -54,6 +50,8 @@ public class SecondaryController<event> {
     public Text testSetPathText;
     public ProgressBar progressBar;
     public ListView tagsListView;
+    public ComboBox fileFormatComboBox;
+    public TextField delimiterTextField;
     private Random randomGenerator = new Random();
     private int loopCounter;
 
@@ -196,6 +194,8 @@ public class SecondaryController<event> {
         tags = new ArrayList<TagRow>(DBConnect.getAllTags());
         List<String> nameList = tags.stream().map(TagRow::getName).collect(Collectors.toList());
         tagsComboBox.getItems().addAll(nameList);
+        fileFormatComboBox.setItems(FXCollections.observableList(Arrays.asList(ImageIO.getWriterFileSuffixes())));
+        fileFormatComboBox.setValue("png");
     }
 
     public void ConnectToDB() {
@@ -245,7 +245,7 @@ public class SecondaryController<event> {
     public void openTrainingDirDialog(ActionEvent actionEvent) {
         trainingDirPath = openDirDialog();
         trainingSetPathText.setText(trainingDirPath);
-        if (trainingDirPath == "" || validationDirPath == "" || testDirPath == "") {
+        if (checkStuff()) {
             exportButton.setDisable(true);
         } else {
             exportButton.setDisable(false);
@@ -255,7 +255,7 @@ public class SecondaryController<event> {
     public void openValidationDirDialog(ActionEvent actionEvent) {
         validationDirPath = openDirDialog();
         validationSetPathText.setText(validationDirPath);
-        if (trainingDirPath == "" || validationDirPath == "" || testDirPath == "") {
+        if (checkStuff()) {
             exportButton.setDisable(true);
         } else {
             exportButton.setDisable(false);
@@ -265,7 +265,7 @@ public class SecondaryController<event> {
     public void openTestDirDialog(ActionEvent actionEvent) {
         testDirPath = openDirDialog();
         testSetPathText.setText(testDirPath);
-        if (trainingDirPath == "" || validationDirPath == "" || testDirPath == "") {
+        if (checkStuff()) {
             exportButton.setDisable(true);
         } else {
             exportButton.setDisable(false);
@@ -281,10 +281,58 @@ public class SecondaryController<event> {
         int numberOfImagesTestSet = Integer.parseInt(numberOfImagesTestSetTF.getText());
         progressBar.setStyle("-fx-accent: green;");
         exportButton.setDisable(true);
-        saveRandomImages(numberOfImagesTrainingSet, imageIds2, trainingDirPath);
+
+        List<String> directoryList = List.of(trainingDirPath,validationDirPath,testDirPath).
+                stream().filter(s -> !s.isBlank()).collect(Collectors.toList());
+        if(directoryList.stream().distinct().count()!=
+            directoryList.stream().count()){
+            errorText.setText("Foldery muszą być różne");
+            return;
+        }
+
+        //just a workaround
+        Integer[] varargs = new Integer[3];
+        if(!trainingDirPath.isBlank()){
+            varargs[0] = numberOfImagesTrainingSet;
+            if(!validationDirPath.isBlank()){
+                varargs[1] = numberOfImagesValidationSet;
+                varargs[2] = numberOfImagesTestSet;
+            }else
+                varargs[1] = numberOfImagesTestSet;
+        }else{
+            if(!validationDirPath.isBlank()){
+                varargs[0]=numberOfImagesValidationSet;
+                varargs[1]=numberOfImagesTestSet;
+            }else
+                varargs[0]=numberOfImagesTestSet;
+        }
+
+        ImageDownloader downloader = new ImageDownloader(
+                DBConnect.mapImagesToStringMap(selectedTagsToStringList(),imageIds2),
+                "tags",getFormatFromComboBox(),getDelimiterFromTextBox(),
+                directoryList,varargs
+                );
+
+
+        /*ImageDownloader downloader = new ImageDownloader(
+                DBConnect.mapImagesToStringMap(selectedTagsToStringList(),imageIds2),
+                "tags",getFormatFromComboBox(),getDelimiterFromTextBox(),
+                directoryList,
+                numberOfImagesTrainingSet,numberOfImagesValidationSet,numberOfImagesTestSet);*/
+
+        progressBar.progressProperty().bind(downloader.progressProperty());
+
+        downloader.setOnSucceeded(workerStateEvent -> {progressBar.progressProperty().unbind(); progressBar.setProgress(1);exportButton.setDisable(false);});
+        downloader.setOnScheduled(workerStateEvent -> {});
+        downloader.setOnFailed(workerStateEvent -> {progressBar.progressProperty().unbind(); progressBar.setStyle("-fx-accent: red;");exportButton.setDisable(false);});
+        Thread th = new Thread(downloader);
+        th.setDaemon(false);
+        th.start();
+
+        /*saveRandomImages(numberOfImagesTrainingSet, imageIds2, trainingDirPath);
         saveRandomImages(numberOfImagesValidationSet, imageIds2, validationDirPath);
-        saveRandomImages(numberOfImagesTestSet, imageIds2, testDirPath);
-        exportButton.setDisable(false);
+        saveRandomImages(numberOfImagesTestSet, imageIds2, testDirPath);*/
+        //exportButton.setDisable(false);
         //progressBar.setProgress(1);
     }
 
@@ -325,5 +373,33 @@ public class SecondaryController<event> {
         if (tagsListView.getItems().size() == 0) {
             numberOfImagesText.setText("Ilość obrazków z wybranymi tagami: 0");
         }
+    }
+
+    public Map<String,String> tagsToStringMap(){
+        List<String> list = tagsListView.getItems();
+        return list.stream().collect(Collectors.toConcurrentMap(Function.identity(),Function.identity()));
+    }
+
+    public List<String> selectedTagsToStringList(){
+        return tagsListView.getItems();
+    }
+
+    public void test(ActionEvent actionEvent) {
+        System.out.println(System.getProperty("file.separator"));
+    }
+
+    public String getFormatFromComboBox(){
+        return (String)fileFormatComboBox.getSelectionModel().getSelectedItem();
+    }
+
+    public String getDelimiterFromTextBox(){
+        return delimiterTextField.getText();
+    }
+
+    public boolean checkStuff(){
+        return ((trainingDirPath.equals("") && validationDirPath.equals("") && testDirPath.equals(""))
+                ||(trainingDirPath.equals("")&&Integer.parseInt(numberOfImagesTrainingSetTF.getText()) != 0)
+                ||(validationDirPath.equals("")&&Integer.parseInt(numberOfImagesValidationSetTF.getText()) != 0)
+                ||(testDirPath.equals("")&&Integer.parseInt(numberOfImagesTestSetTF.getText()) != 0));
     }
 }

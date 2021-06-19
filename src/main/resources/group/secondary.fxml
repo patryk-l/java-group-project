@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="755.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.SecondaryController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="755.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group.SecondaryController">
    <children>
       <Button layoutX="14.0" layoutY="24.0" onAction="#switchToPrimary" text="Przejdz do importowania danych" />
       <Button layoutX="382.0" layoutY="233.0" mnemonicParsing="false" onAction="#openTrainingDirDialog" text="Training set" />
@@ -38,5 +34,8 @@
       <ListView fx:id="tagsListView" layoutX="35.0" layoutY="119.0" prefHeight="191.0" prefWidth="200.0" />
       <Button layoutX="258.0" layoutY="80.0" mnemonicParsing="false" onAction="#addTag" text="Dodaj tag" />
       <Button layoutX="265.0" layoutY="190.0" mnemonicParsing="false" onMousePressed="#removeTagFromList" text="Usuń tag" />
+      <ComboBox fx:id="fileFormatComboBox" layoutX="622.0" layoutY="402.0" prefHeight="25.0" prefWidth="97.0" />
+      <TextField fx:id="delimiterTextField" layoutX="563.0" layoutY="402.0" prefHeight="25.0" prefWidth="36.0" promptText="CSV delimiter" text=";" />
+      <TextField editable="false" layoutX="468.0" layoutY="402.0" prefHeight="25.0" prefWidth="88.0" text="CSV delimiter" />
    </children>
 </Pane>

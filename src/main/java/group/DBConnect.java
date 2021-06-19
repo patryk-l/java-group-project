@@ -5,6 +5,8 @@ import group.file_loaders.CSVRow;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 public class DBConnect {
@@ -238,5 +240,38 @@ public class DBConnect {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    public static Map<Integer,List<String>> mapImagesToStringMap(List<String> tagList, List<Integer> imageIds){
+        if(tagList==null || tagList.isEmpty())
+            throw new NullPointerException("List of tags null or empty");
+        String sql = "select images.id, tags.name " +
+                "from images join images_tags on images.id = images_tags.image_id join tags on images_tags.tag_id = tags.id " +
+                "where tags.name in (" + tagList.stream().reduce("",(s, s2) -> s+",\""+s2 +"\"").substring(1) +")";
+
+        Map<Integer,List<String>> map = new ConcurrentHashMap<>();
+        Map<String,Integer> listIndexMap = new HashMap<>();
+        for(Integer id : imageIds)
+            map.put(id, new ArrayList<>());
+        for(int i = 0; i < tagList.size(); i++)
+            listIndexMap.put(tagList.get(i),i);
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        try (ResultSet resultSet = statement.executeQuery(sql)){
+            while(resultSet.next()){
+                Integer resultImageId = resultSet.getInt(1);
+                String resultTagName = resultSet.getString(2);
+                if(map.containsKey(resultImageId))
+                    map.get(resultImageId).add(tagList.get(listIndexMap.get(resultTagName)));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return map;
     }
 }

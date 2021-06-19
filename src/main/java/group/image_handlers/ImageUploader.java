@@ -23,6 +23,7 @@ public class ImageUploader extends Task<Void> {
     protected Void call() throws Exception {
         int size = tagMap.entrySet().size();
         int workDone = 0;
+        updateProgress(0,size);
         for (Map.Entry<File, List<Integer>> entry : tagMap.entrySet()) {
             ImageRow imageRow = new ImageRow(entry.getKey());
             try {

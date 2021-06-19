@@ -101,4 +101,6 @@ public class ImageRow {
     public void setHeight(int height) {
         this.height.set(height);
     }
+
+    public byte[] getImageAsByteArray(){return image;}
 }
