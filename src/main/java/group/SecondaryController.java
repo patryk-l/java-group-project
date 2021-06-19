@@ -198,16 +198,6 @@ public class SecondaryController<event> {
         fileFormatComboBox.setValue("png");
     }
 
-    public void ConnectToDB() {
-        System.out.println("test");
-        try {
-            DBConnect.connectToDB();
-            System.out.println("Connected with database");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public String openDirDialog() {
         String path;
         DirectoryChooser directoryChooser=new DirectoryChooser();
@@ -382,10 +372,6 @@ public class SecondaryController<event> {
 
     public List<String> selectedTagsToStringList(){
         return tagsListView.getItems();
-    }
-
-    public void test(ActionEvent actionEvent) {
-        System.out.println(System.getProperty("file.separator"));
     }
 
     public String getFormatFromComboBox(){

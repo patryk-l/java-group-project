@@ -42,8 +42,6 @@ public class ImageDownloader extends Task<Void> {
         } catch (Exception e) {
             System.err.println("Image downloader initialization failed, directories probably don't match splits");
         }
-        for(String string : directorySplits.keySet())
-            System.out.println(string + " " + directorySplits.get(string));
     }
 
     @Override
