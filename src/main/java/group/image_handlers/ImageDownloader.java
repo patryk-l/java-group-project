@@ -59,7 +59,7 @@ public class ImageDownloader extends Task<Void> {
                 FileOutputStream csvOutput = new FileOutputStream(directory + csvFileName, true);
                 if (appending)
                     csvOutput.write('\n');
-
+                appending = false;
                 Integer numberOfImages = directorySplits.get(directory);
                 for (int i = 0; i < numberOfImages; i++) {
                     Integer id = keys.remove(0);
@@ -67,6 +67,9 @@ public class ImageDownloader extends Task<Void> {
                     ImageRow temporary = DBConnect.getImage(id);
                     File tempFile = new File(directory + temporary.getId() + "." + format);
                     try (InputStream stream = temporary.getImage()) {
+                        if(appending)
+                            csvOutput.write('\n');
+                        appending = true;
                         BufferedImage bufferedImage = ImageIO.read(stream);
                         ImageIO.write(bufferedImage, format, tempFile);
                         csvOutput.write((temporary.getId()+"."+format
