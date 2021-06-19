@@ -32,7 +32,7 @@
       <Text fx:id="testSetPathText" layoutX="490.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="239.33657836914062" />
       <ProgressBar fx:id="progressBar" layoutX="471.0" layoutY="473.0" prefWidth="200.0" progress="0.0" />
       <ListView fx:id="tagsListView" layoutX="35.0" layoutY="119.0" prefHeight="191.0" prefWidth="200.0" />
-      <Button layoutX="258.0" layoutY="80.0" mnemonicParsing="false" onAction="#addTag" text="Dodaj tag" />
+      <Button fx:id="addTagButton" layoutX="258.0" layoutY="80.0" mnemonicParsing="false" onAction="#addTag" text="Dodaj tag" />
       <Button layoutX="265.0" layoutY="190.0" mnemonicParsing="false" onMousePressed="#removeTagFromList" text="Usuń tag" />
       <ComboBox fx:id="fileFormatComboBox" layoutX="622.0" layoutY="402.0" prefHeight="25.0" prefWidth="97.0" />
       <TextField fx:id="delimiterTextField" layoutX="563.0" layoutY="402.0" prefHeight="25.0" prefWidth="36.0" promptText="CSV delimiter" text=";" />

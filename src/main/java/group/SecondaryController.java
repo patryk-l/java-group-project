@@ -52,6 +52,7 @@ public class SecondaryController<event> {
     public ListView tagsListView;
     public ComboBox fileFormatComboBox;
     public TextField delimiterTextField;
+    public Button addTagButton;
     private Random randomGenerator = new Random();
     private int loopCounter;
 
@@ -165,6 +166,15 @@ public class SecondaryController<event> {
                     throwables.printStackTrace();
                 }
 
+            }
+        });
+        tagsComboBox.setOnAction((event) -> {
+            Object selectedItem = tagsComboBox.getSelectionModel().getSelectedItem();
+
+            if (selectedItem == null) {
+                addTagButton.setDisable(true);
+            } else {
+                addTagButton.setDisable(false);
             }
         });
         leftArrow.setDisable(true);
