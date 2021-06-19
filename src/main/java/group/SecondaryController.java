@@ -53,6 +53,7 @@ public class SecondaryController<event> {
     public ComboBox fileFormatComboBox;
     public TextField delimiterTextField;
     public Button addTagButton;
+    public Button deleteTagButton;
     private Random randomGenerator = new Random();
     private int loopCounter;
 
@@ -178,7 +179,10 @@ public class SecondaryController<event> {
             }
         });
         leftArrow.setDisable(true);
+        addTagButton.setDisable(true);
         rightArrow.setDisable(true);
+        deleteTagButton.disableProperty()
+                .bind(tagsListView.getSelectionModel().selectedItemProperty().isNull());
     }
 
     public void cleanForm() {
