@@ -388,4 +388,18 @@ public class SecondaryController<event> {
                 ||(validationDirPath.equals("")&&Integer.parseInt(numberOfImagesValidationSetTF.getText()) != 0)
                 ||(testDirPath.equals("")&&Integer.parseInt(numberOfImagesTestSetTF.getText()) != 0));
     }
+
+    //use at your own risk
+    public void deleteImages(ActionEvent actionEvent) {
+        List<String> tags = selectedTagsToStringList();
+        Integer deletedImages = 0;
+        for(String tag : tags){
+            try {
+                deletedImages+=DBConnect.deleteByTag(tag);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        errorText.setText("Deleted " + deletedImages);
+    }
 }

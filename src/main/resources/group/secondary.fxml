@@ -37,5 +37,6 @@
       <ComboBox fx:id="fileFormatComboBox" layoutX="622.0" layoutY="402.0" prefHeight="25.0" prefWidth="97.0" />
       <TextField fx:id="delimiterTextField" layoutX="563.0" layoutY="402.0" prefHeight="25.0" prefWidth="36.0" promptText="CSV delimiter" text=";" />
       <TextField editable="false" layoutX="468.0" layoutY="402.0" prefHeight="25.0" prefWidth="88.0" text="CSV delimiter" />
+      <Button layoutX="242.0" layoutY="287.0" mnemonicParsing="false" onAction="#deleteImages" prefHeight="25.0" prefWidth="119.0" style="-fx-background-color: #cc2222;" text="Usuń obrazki" textFill="WHITE" />
    </children>
 </Pane>
