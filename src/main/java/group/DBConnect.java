@@ -284,4 +284,36 @@ public class DBConnect {
         }
         return map;
     }
+
+    public static int getAverageHeight(List<Integer> imageIds){
+        if(imageIds.isEmpty())
+            return -1;
+        String sql = "select avg(image_height)\n" +
+                "from images\n" +
+                "where id in (" + imageIds.stream().map(integer -> integer.toString())
+                .reduce("", (s, s2) -> s+","+s2).substring(1) +  ")";
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            return resultSet.getInt(0);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return -2;
+    }
+
+    public static int getAverageWidth(List<Integer> imageIds){
+        if(imageIds.isEmpty())
+            return -1;
+        String sql = "select avg(image_width)\n" +
+                "from images\n" +
+                "where id in (" + imageIds.stream().map(integer -> integer.toString())
+                .reduce("", (s, s2) -> s+","+s2).substring(1) +  ")";
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            return resultSet.getInt(0);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return -2;
+    }
 }

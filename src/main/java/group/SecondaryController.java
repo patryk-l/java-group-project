@@ -208,7 +208,8 @@ public class SecondaryController<event> {
         tags = new ArrayList<TagRow>(DBConnect.getAllTags());
         List<String> nameList = tags.stream().map(TagRow::getName).collect(Collectors.toList());
         tagsComboBox.getItems().addAll(nameList);
-        fileFormatComboBox.setItems(FXCollections.observableList(Arrays.asList(ImageIO.getWriterFileSuffixes())));
+        fileFormatComboBox.setItems(FXCollections.observableList(
+                Arrays.asList(Arrays.stream(ImageIO.getWriterFileSuffixes()).filter(s -> !s.equals("wbmp")).toArray())));
         fileFormatComboBox.setValue("png");
     }
 
