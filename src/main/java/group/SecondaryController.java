@@ -209,7 +209,7 @@ public class SecondaryController<event> {
         List<String> nameList = tags.stream().map(TagRow::getName).collect(Collectors.toList());
         tagsComboBox.getItems().addAll(nameList);
         fileFormatComboBox.setItems(FXCollections.observableList(
-                Arrays.asList(Arrays.stream(ImageIO.getWriterFileSuffixes()).filter(s -> !s.equals("wbmp")).toArray())));
+                Arrays.stream(ImageIO.getWriterFileSuffixes()).filter(s -> !s.equals("wbmp")).collect(Collectors.toList())));
         fileFormatComboBox.setValue("png");
     }
 
