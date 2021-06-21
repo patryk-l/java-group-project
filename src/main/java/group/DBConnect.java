@@ -153,20 +153,28 @@ public class DBConnect {
 
     public static Integer deleteByTag(String tag) throws SQLException {
         String sql = "select images.id,tags.id " +
-                "from images join images_tags it on images.id = it.image_id join tags on it.tag_id = tags.id " +
+                "from images join images_tags it on images.id = it.image_id right join tags on it.tag_id = tags.id " +
                 "where tags.name = ?";
         Integer images_delete = 0;
         try(PreparedStatement pre = connection.prepareStatement(sql)){
             pre.setString(1,tag);
             ResultSet resultSet = pre.executeQuery();
+            int tagId = 0;
+            boolean notEmpty = false;
             while(resultSet.next()){
+                notEmpty=true;
+                tagId = resultSet.getInt(2);
+                if(resultSet.getInt(1)!=0){
                 Statement statement = connection.createStatement();
-                statement.executeBatch();
                 statement.addBatch("delete from images where id="+resultSet.getInt(1));
-                statement.addBatch("delete from tags where id="+resultSet.getInt(2));
                 statement.addBatch("delete from images_tags where image_id="+resultSet.getInt(1));
                 images_delete += statement.executeBatch()[0];
                 statement.close();
+                }
+            }
+            if(notEmpty){
+                Statement statement = connection.createStatement();
+                statement.execute("delete from tags where id="+tagId);
             }
         } catch (SQLException e) {
             System.err.println("Error while attempting to delete by tags");
