@@ -420,5 +420,11 @@ public class SecondaryController<event> {
         rightArrow.setDisable(true);
         numberOfImagesText.setText("Ilość obrazków z wybranymi tagami: 0");
         errorText.setText("Deleted " + deletedImages);
+        try {
+            tagsComboBox.getItems().clear();
+            setComboBoxData();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

@@ -153,29 +153,21 @@ public class DBConnect {
 
     public static Integer deleteByTag(String tag) throws SQLException {
         String sql = "select images.id,tags.id " +
-                "from images join images_tags it on images.id = it.image_id right join tags on it.tag_id = tags.id " +
+                "from images join images_tags it on images.id = it.image_id join tags on it.tag_id = tags.id " +
                 "where tags.name = ?";
         Integer images_delete = 0;
         try(PreparedStatement pre = connection.prepareStatement(sql)){
             pre.setString(1,tag);
             ResultSet resultSet = pre.executeQuery();
-            int tagId = 0;
-            boolean notEmpty = false;
-            while(resultSet.next()){
-                notEmpty=true;
-                tagId = resultSet.getInt(2);
-                if(resultSet.getInt(1)!=0){
+            while(resultSet.next()) {
                 Statement statement = connection.createStatement();
-                statement.addBatch("delete from images where id="+resultSet.getInt(1));
-                statement.addBatch("delete from images_tags where image_id="+resultSet.getInt(1));
+                statement.addBatch("delete from images where id=" + resultSet.getInt(1));
+                statement.addBatch("delete from images_tags where image_id=" + resultSet.getInt(1));
                 images_delete += statement.executeBatch()[0];
                 statement.close();
-                }
             }
-            if(notEmpty){
-                Statement statement = connection.createStatement();
-                statement.execute("delete from tags where id="+tagId);
-            }
+            cleanTags();
+
         } catch (SQLException e) {
             System.err.println("Error while attempting to delete by tags");
             e.printStackTrace();
@@ -183,6 +175,19 @@ public class DBConnect {
         }
 
         return images_delete;
+    }
+
+    public static int cleanTags(){
+        String sql = "delete \n" +
+                "from tags\n" +
+                "where tags.id not in (select tag_id from images_tags)";
+        try(Statement statement = connection.createStatement()){
+            return statement.executeUpdate(sql);
+        }catch (SQLException e){
+            System.err.println("Error while deleting unassociated tags");
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public static List<Integer> queryImageIdsByTag(String tag) throws SQLException {
