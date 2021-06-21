@@ -122,7 +122,7 @@ public class SettingsController  {
         DBConnect.executeJDML("create table images_tags(" +
                 "image_id int not null," +
                 "tag_id int not null," +
-                "constraint fk_image_id foreign key(image_id) references images(id)," +
-                "constraint fk_tag_id foreign key(tag_id) references tags(id));");
+                "constraint fk_image_id foreign key(image_id) references images(id)  ON DELETE CASCADE," +
+                "constraint fk_tag_id foreign key(tag_id) references tags(id) ON DELETE CASCADE);");
     }
 }

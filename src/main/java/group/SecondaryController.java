@@ -414,6 +414,11 @@ public class SecondaryController<event> {
                 throwables.printStackTrace();
             }
         }
+        tagsListView.getItems().clear();
+        exampleImageView.setImage(null);
+        leftArrow.setDisable(true);
+        rightArrow.setDisable(true);
+        numberOfImagesText.setText("Ilość obrazków z wybranymi tagami: 0");
         errorText.setText("Deleted " + deletedImages);
     }
 }
