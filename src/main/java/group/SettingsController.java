@@ -80,10 +80,9 @@ public class SettingsController  {
         properties.setProperty("db.url", "jdbc:mysql://"+connectionString.getText());
         properties.setProperty("db.user", username.getText());
         properties.setProperty("db.password", password.getText());
-
+        status.setVisible(true);
         try {
             DBConnect.connectToDB(properties);
-            status.setVisible(true);
         } catch (SQLException e) {
             status.setText("Błąd połączenia. Sprawdź poprawność wprowadzonych danych");
             status.setTextFill(Color.RED);

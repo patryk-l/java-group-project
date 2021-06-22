@@ -377,6 +377,9 @@ public class SecondaryController<event> {
         tagsListView.getItems().remove(tagsListView.getSelectionModel().getSelectedItem());
         if (tagsListView.getItems().size() == 0) {
             numberOfImagesText.setText("Ilość obrazków z wybranymi tagami: 0");
+            exampleImageView.setImage(null);
+            leftArrow.setDisable(true);
+            rightArrow.setDisable(true);
         }
     }
 

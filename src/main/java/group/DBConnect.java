@@ -30,7 +30,7 @@ public class DBConnect {
             connection = DriverManager.getConnection(properties.getProperty("db.url"),properties.getProperty("db.user"),properties.getProperty("db.password"));
         } catch (SQLException e) {
             System.out.println("Error when connecting to database");
-            e.printStackTrace();
+            //e.printStackTrace();
             throw e;
         }
     }
